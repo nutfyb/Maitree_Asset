@@ -187,14 +187,14 @@ function importExelData2MySQL(res, filePath, email) {
         const date = new Date();
         rows.shift();
 
-        let sql = "INSERT INTO item (`Asset_Number`,`Asset_Description`,`Model`,`Serial`,`Location`,`Room`,`Received_date`,`Original_value`,`Cost_center`,`Department`,`Vendor_name`,Year,Status, Email_Importer,Date_Upload) VALUES ?";
-        var count = [1,4,5,6,7,8,9,10,11,12,13];
+        let sql = "INSERT INTO item (`Asset_Number`,Inventory_Number,`Asset_Description`,`Model`,`Serial`,`Location`,`Room`,`Received_date`,`Original_value`,`Cost_center`,`Department`,`Vendor_name`,Year,Status, Email_Importer,Date_Upload) VALUES ?";
+        var count = [1,3,4,5,6,7,8,9,10,11,12,13];
         for (var i = 0; i < rows.length; i++) {
             var temp = rows[i];
            
             rows[i] = [];
 
-            for (var j = 0; j < 11; j++) {
+            for (var j = 0; j < 12; j++) {
 
                 rows[i].push(temp[count[j]]);
             }
