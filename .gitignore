@@ -2,7 +2,7 @@ assets/
 node_modules/
 # server.rest
 # public/
-# uploads/
+uploads/
 # _DS_Store
 README.md
 package-lock.json
