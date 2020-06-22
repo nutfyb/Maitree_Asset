@@ -1,10 +1,11 @@
-# assets/
+assets/
 node_modules/
 # server.rest
 # public/
 # uploads/
 # _DS_Store
-# README.md
-# package.json
-# package-lock.json
-# key.js
+README.md
+package-lock.json
+key.js
+dbConfig.js
+
