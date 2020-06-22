@@ -285,7 +285,7 @@ app.put("/item/take", function (req, res) {
 
     const image = req.body.take;
 
-    const sql = "UPDATE item SET takepicture = 1 where Asset_Number IN(?) ;"
+    const sql = "UPDATE item SET Takepicture = 1 where Asset_Number IN(?) ;"
     con.query(sql, [image], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
@@ -303,7 +303,7 @@ app.put("/item/take", function (req, res) {
 app.put("/item/addImage", function (req, res) {
     const image = req.body.image;
     const Asset_Number = req.body.Asset_Number;
-    const sql = "UPDATE item SET image=? where Asset_Number=?;"
+    const sql = "UPDATE item SET Image=? where Asset_Number=?;"
     con.query(sql, [image, Asset_Number], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
@@ -318,7 +318,7 @@ app.put("/item/addImage", function (req, res) {
 app.get("/manageUser/showAllUsers/:Email_user", function (req, res) {
     const Email_user = req.params.Email_user;
     // const year =  new Date().getFullYear();
-    const sql = "select year,Email_user,Email_assigner,role from year_user WHERE Email_user = ?"
+    const sql = "select Year,Email_user,Email_assigner,Role from year_user WHERE Email_user = ?"
 
     con.query(sql, [Email_user], function (err, result, fields) {
         if (err) {
@@ -332,7 +332,7 @@ app.get("/manageUser/showAllUsers/:Email_user", function (req, res) {
 // Load inspected total item numbers by a user
 app.get("/user/profile/inspectedItem/Total/Number1/:Email_Committee", function (req, res) {
     const Email_Committee = req.params.Email_Committee;
-    const sql = "SELECT count(status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Email_Committee=? AND Year =?;"
+    const sql = "SELECT count(Status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Email_Committee=? AND Year =?;"
 
     con.query(sql, [Email_Committee, d], function (err, result, fields) {
         if (err) {
@@ -360,7 +360,7 @@ app.get("/user/datescan", function (req, res) {
 // Load inspected total item numbers by a user
 app.get("/user/profile/inspectedItem/Total/Number/:Email_Committee", function (req, res) {
     const Email_Committee = req.params.Email_Committee;
-    const sql = "SELECT count(status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Email_Committee=?;"
+    const sql = "SELECT count(Status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Email_Committee=?;"
 
     con.query(sql, [Email_Committee], function (err, result, fields) {
         if (err) {
@@ -375,7 +375,7 @@ app.get("/user/profile/inspectedItem/Total/Number/:Email_Committee", function (r
 app.get("/user/profile/inspectedItem/:Status/:Email_Committee", function (req, res) {
     const Email_Committee = req.params.Email_Committee;
     const Status = req.params.Status;
-    const sql = "SELECT count(status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Status=? AND Email_Committee=?;"
+    const sql = "SELECT count(Status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Status=? AND Email_Committee=?;"
 
     con.query(sql, [Status, Email_Committee], function (err, result, fields) {
         if (err) {
@@ -429,7 +429,7 @@ app.get("/year/iteem", function (req, res) {
 });
 
 // Add info of new user in manage user page
-app.put("/manageUser/update/:Email_user/:Email_assigner/:role/:Email_useru", function (req, res) {
+app.put("/manageUser/update/:Email_user/:Email_assigner/:Role/:Email_useru", function (req, res) {
     const year = new Date().getFullYear();
     const Email_user = req.params.Email_user;
     const Email_assigner = req.params.Email_assigner;
@@ -521,7 +521,7 @@ app.get("/item/dashboard/showAllInfo/:location", function (req, res) {
 
 // Load item numbers
 app.get("/item/dashboard/number/:status", function (req, res) {
-    const sql = "SELECT count(status) AS 'Numbers_of_item' FROM item WHERE status=?;"
+    const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item WHERE Status=?;"
     const year = new Date().getFullYear();
     const status = req.params.status;
     con.query(sql, [status, year], function (err, result, fields) {
@@ -535,7 +535,7 @@ app.get("/item/dashboard/number/:status", function (req, res) {
 
 // Load item numbers
 app.get("/item/dashboard/number", function (req, res) {
-    const sql = "SELECT count(status) AS 'Numbers_of_item' FROM item ;"
+    const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item ;"
     const year = new Date().getFullYear();
     con.query(sql, [year], function (err, result, fields) {
         if (err) {
@@ -548,7 +548,7 @@ app.get("/item/dashboard/number", function (req, res) {
 
 // Load item numbers with year
 app.get("/item/dashboard/number2/:status/:year", function (req, res) {
-    const sql = "SELECT count(status) AS 'Numbers_of_item' FROM item WHERE status=? AND year = ?;"
+    const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item WHERE Status=? AND Year = ?;"
     const year = req.params.year;
     const status = req.params.status;
     con.query(sql, [status, year], function (err, result, fields) {
@@ -562,7 +562,7 @@ app.get("/item/dashboard/number2/:status/:year", function (req, res) {
 
 // Load item numbers year
 app.get("/item/dashboard/number1/:year", function (req, res) {
-    const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item WHERE year = ?;"
+    const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item WHERE Year = ?;"
     const year = req.params.year;
     con.query(sql, [year], function (err, result, fields) {
         if (err) {
@@ -673,7 +673,7 @@ app.get("/item/dashboard/showAllInfo3/:Email_Committee", function (req, res) {
 
 // Load item info
 app.get("/item/:status", function (req, res) {
-    const sql = "select Image,Asset_Number,Model,Serial,Location,Received_date,Original_value,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status from item where status=? AND year =?"
+    const sql = "select Image,Asset_Number,Model,Serial,Location,Received_date,Original_value,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status from item where Status=? AND Year =?"
     const year = new Date().getFullYear();
     const status = req.params.status;
     con.query(sql, [status, year], function (err, result, fields) {
@@ -687,7 +687,7 @@ app.get("/item/:status", function (req, res) {
 // UPDATE item,year_user SET item.Status=? where item.Asset_Number=? AND year_user.Email_user=?
 // For print barcode or QR code of item
 app.get("/item/forPrintQRcode_Barcode/:Email_Committee", function (req, res) {
-    const sql = "select Asset_Number, Asset_Description, Received_date, Department, year,status, image from item where year=? and Email_Committee=?;"
+    const sql = "select Asset_Number, Asset_Description, Received_date, Department, Year,Status, Image from item where year=? and Email_Committee=?;"
     const year = new Date().getFullYear();
     const Email_Committee = req.params.Email_Committee;
     con.query(sql, [year, Email_Committee], function (err, result, fields) {
@@ -741,7 +741,7 @@ app.get("/landing2/showSomeInfo", function (req, res) {
 // Load item number all in database
 app.get("/item/numberAll", function (req, res) {
     const year = new Date().getFullYear();
-    const sql = "SELECT count(status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Year = ?"
+    const sql = "SELECT count(Status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Year = ?"
     con.query(sql, [year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
@@ -754,7 +754,7 @@ app.get("/item/numberAll", function (req, res) {
 // Load date and time of job
 app.get("/dateTime/showDateTime", function (req, res) {
     const year = new Date().getFullYear();
-    const sql = "select * from date_check where years = ?"
+    const sql = "select * from date_check where Years = ?"
 
     con.query(sql, [year], function (err, result, fields) {
         if (err) {
@@ -767,7 +767,7 @@ app.get("/dateTime/showDateTime", function (req, res) {
 
 // Load info of main datatable page
 app.get("/maindataTable/info/:status", function (req, res) {
-    const sql = "select Image,Asset_Description,Asset_Number,Model,Serial,Location,Received_date,Original_value,Cost_center,Room,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status,Date_Scan from item where year=? and status=?"
+    const sql = "select Image,Asset_Description,Asset_Number,Model,Serial,Location,Received_date,Original_value,Cost_center,Room,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status,Date_Scan from item where Year=? and Status=?"
     const year = new Date().getFullYear();
     const status = req.params.status;
     con.query(sql, [year, status], function (err, result, fields) {
@@ -798,7 +798,7 @@ app.put("/item/edit", function (req, res) {
 // Load info of all user of manage user page
 app.get("/manageUser/showAllUser/:year", function (req, res) {
     const year = req.params.year;
-    const sql = "select year,Email_user,Email_assigner,role from year_user WHERE year=?"
+    const sql = "select Year,Email_user,Email_assigner,Role from year_user WHERE Year=?"
 
     con.query(sql, [year], function (err, result, fields) {
         if (err) {
@@ -810,13 +810,13 @@ app.get("/manageUser/showAllUser/:year", function (req, res) {
 });
 
 // Add info of new user in manage user page
-app.post("/manageUser/add/:Email_user/:Email_assigner/:role", function (req, res) {
+app.post("/manageUser/add/:Email_user/:Email_assigner/:Role", function (req, res) {
     const year = new Date().getFullYear();
     const Email_user = req.params.Email_user;
     const Email_assigner = req.params.Email_assigner;
     const role = req.params.role;
 
-    const sql = "INSERT INTO year_user(year,Email_user,Email_assigner,role) VALUES (?,?,?,?)";
+    const sql = "INSERT INTO year_user(Year,Email_user,Email_assigner,Role) VALUES (?,?,?,?)";
     con.query(sql, [year, Email_user, Email_assigner, role], function (err, result, fields) {
         if (err) {
             console.error(err.message);
@@ -838,7 +838,7 @@ app.post("/manageUser/add/:Email_user/:Email_assigner/:role", function (req, res
 
 // Load item info landing 2
 app.get("/item5/:Asset_Number", function (req, res) {
-    const sql = "SELECT Image,Asset_Number,Model,Serial,Location,Received_date,Asset_Description,Room,Original_value,Cost_center,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status,Date_Scan FROM `item` WHERE `Asset_Number` =? AND year =?"
+    const sql = "SELECT Image,Asset_Number,Model,Serial,Location,Received_date,Asset_Description,Room,Original_value,Cost_center,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status,Date_Scan FROM `item` WHERE `Asset_Number` =? AND Year =?"
     const year = new Date().getFullYear();
     const Asset_Number = req.params.Asset_Number;
     con.query(sql, [Asset_Number, year], function (err, result, fields) {
@@ -870,7 +870,7 @@ app.post("/dateTime/insertTime/:Date_start/:Date_end", function (req, res) {
     const Date_start = req.params.Date_start;
     const Date_end = req.params.Date_end;
 
-    const sql = "INSERT INTO date_check(years,Date_start,Date_end) VALUES (?,?,?)";
+    const sql = "INSERT INTO date_check(Years,Date_start,Date_end) VALUES (?,?,?)";
     con.query(sql, [years, Date_start, Date_end], function (err, result, fields) {
         if (err) {
             console.error(err.message);
@@ -896,7 +896,7 @@ app.put("/dateTime/updateTime/:Date_start/:Date_end", function (req, res) {
     const years = new Date().getFullYear();
     const Date_start = req.params.Date_start;
     const Date_end = req.params.Date_end;
-    const sql = "UPDATE date_check SET Date_start=?, Date_end=? where years=?;"
+    const sql = "UPDATE date_check SET Date_start=?, Date_end=? where Years=?;"
     con.query(sql, [Date_start, Date_end, years], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
