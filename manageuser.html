@@ -75,16 +75,16 @@
                     }).done(function (dataSet, state, xhr) {
 
                         for (let i = 0; i < dataSet.length; i++) {
-                            if (dataSet[i].role == 2) {
-                                dataSet[i].role = "กรรมการ"
-                            } else if (dataSet[i].role == 1) {
-                                dataSet[i].role = "ผู้ดูแลระบบ"
+                            if (dataSet[i].Role == 2) {
+                                dataSet[i].Role = "กรรมการ"
+                            } else if (dataSet[i].Role == 1) {
+                                dataSet[i].Role = "ผู้ดูแลระบบ"
                             }
-                            var nf = new Intl.NumberFormat();
-                            dataSet[i].Original_value = nf.format(dataSet[i].Original_value);
-                            if (dataSet[i].Image === null) {
-                        dataSet[i].Image = "/img/noimg.png"
-                    } 
+                            if (dataSet[i].Name !== null) {
+                                dataSet[i].Email_user = dataSet[i].Name
+                            } else {
+                                dataSet[i].Email_user = "(ยังไม่ยืนยัน) "+ dataSet[i].Email_user 
+                            }
                         }
 
                         table.clear();
@@ -98,16 +98,17 @@
                 }).done(function (dataSet, state, xhr) {
 
                     for (let i = 0; i < dataSet.length; i++) {
-                        if (dataSet[i].role == 2) {
-                            dataSet[i].role = "กรรมการ"
-                        } else if (dataSet[i].role == 1) {
-                            dataSet[i].role = "ผู้ดูแลระบบ"
+                        if (dataSet[i].Role == 2) {
+                            dataSet[i].Role = "กรรมการ"
+                        } else if (dataSet[i].Role == 1) {
+                            dataSet[i].Role = "ผู้ดูแลระบบ"
                         }
-                        var nf = new Intl.NumberFormat();
-                        dataSet[i].Original_value = nf.format(dataSet[i].Original_value);
-                        if (dataSet[i].Image === null) {
-                        dataSet[i].Image = "/img/noimg.png"
-                    } 
+                        if (dataSet[i].Name !== null) {
+                                dataSet[i].Email_user = dataSet[i].Name
+                            } else {
+                                dataSet[i].Email_user ="(ยังไม่ยืนยัน) "+ dataSet[i].Email_user 
+                            }
+                        
                     }
                     table.clear();
                     //display modified JSON in DataTable
@@ -115,7 +116,7 @@
                 }).fail(function (xhr, state, error) {
                     //get data failed
                     $(".alertText").html(xhr.responseText)
-                     $("#alertmodal").modal();
+                    $("#alertmodal").modal();
                 });
 
             })
@@ -127,111 +128,112 @@
                 if (!newmail || newmail.length === 0) {
                     $(".alertText").html("กรุณากรอกอีเมล")
                     $("#alertmodal").modal();
-                    
+
                 } else {
                     $(".btn-sm").hide();
                     $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
                     $(".alertText").html("เปลี่ยนข้อมูลสำเร็จ")
                     $("#alertmodal").modal();
-                    if(newmail.match(pattern)){
+                    if (newmail.match(pattern)) {
                         $.ajax({
-                    method: "GET",
-                    url: "/profile/infouser"
-                }).done(function (dataSet, state, xhr) {
-                    $.ajax({
-                        method: "PUT",
-                        url: "/manageUser/update/" + newmail + "/" + dataSet.email + "/" + rol + "/" + Email_user
-                    }).done(function (data, state, xhr) {
-                        $(".alertText").html(data)
-                        $("#alertmodal").modal();
-                    }).fail(function (xhr, state, error) {
-                        //get data failed
-                        $(".alertText").html("มีผู้ใช้นี้แล้ว")
-                        $("#alertmodal").modal();
-                    });
-                    $.ajax({
-                        method: "GET",
-                        url: "/user/profile/inspectedItem/Total/Number1/" + data.email
-                    }).done(function (dataSet, state, xhr) {
-                        $("#all").html(dataSet[0].Numbers_of_Inspected_Item);
-                    }).fail(function (xhr, state, error) {
-                        //get data failed
-                        $(".btn-sm").hide();
-                        $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
-                        $(".alertText").html(xhr.responseText)
-                        $("#alertmodal").modal();
-                    });
-                }).fail(function (xhr, state, error) {
-                    //get data failed
-                    $(".btn-sm").hide();
-                    $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
-                    $(".alertText").html(xhr.responseText)
-                    $("#alertmodal").modal();
-                });
-                $(".modal").modal("hide");
-                
-                    }else{
+                            method: "GET",
+                            url: "/profile/infouser"
+                        }).done(function (dataSet, state, xhr) {
+                            $.ajax({
+                                method: "PUT",
+                                url: "/manageUser/update/" + newmail + "/" + dataSet.email + "/" + rol + "/" + Email_user
+                            }).done(function (data, state, xhr) {
+                                $(".alertText").html(data)
+                                $("#alertmodal").modal();
+                            }).fail(function (xhr, state, error) {
+                                //get data failed
+                                $(".alertText").html("มีผู้ใช้นี้แล้ว")
+                                $("#alertmodal").modal();
+                            });
+                            $.ajax({
+                                method: "GET",
+                                url: "/user/profile/inspectedItem/Total/Number1/" + data.email
+                            }).done(function (dataSet, state, xhr) {
+                                $("#all").html(dataSet[0].Numbers_of_Inspected_Item);
+                            }).fail(function (xhr, state, error) {
+                                //get data failed
+                                $(".btn-sm").hide();
+                                $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
+                                $(".alertText").html(xhr.responseText)
+                                $("#alertmodal").modal();
+                            });
+                        }).fail(function (xhr, state, error) {
+                            //get data failed
+                            $(".btn-sm").hide();
+                            $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
+                            $(".alertText").html(xhr.responseText)
+                            $("#alertmodal").modal();
+                        });
+                        $(".modal").modal("hide");
+
+                    } else {
                         $(".alertText").html("รูปแบบอีเมลไม่ถูกต้อง")
                         $("#alertmodal").modal();
                     }
                 }
-                
+
 
             });
 
             $("#save2").click(function () {
                 let newmail = $("#addMail2").val();
-                let role;
+                let Role;
                 if (!newmail || newmail.length === 0) {
                     $(".alertText").html("กรุณากรอกอีเมล")
                     $("#alertmodal").modal();
                 } else {
-                    if(newmail.match(pattern)){
+                    if (newmail.match(pattern)) {
                         var x = document.getElementById("admin").checked;
-                    if (x) {
-                        role = 1;
-                    } else {
-                        role = 2
-                    }
+                        if (x) {
+                            Role = 1;
+                        } else {
+                            Role = 2
+                        }
 
 
-                    $.ajax({
-                        method: "GET",
-                        url: "/profile/infouser"
-                    }).done(function (dataSet, state, xhr) {
                         $.ajax({
-                            method: "POST",
-                            url: "/manageUser/add/" + newmail + "/" + dataSet.email + "/" + role
-                        }).done(function (data, state, xhr) {
-                        $(".btn-sm").hide();
-                        $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
-                    
-                        $(".alertText").html(data)
-                        $("#alertmodal").modal();
-                        
+                            method: "GET",
+                            url: "/profile/infouser"
+                        }).done(function (dataSet, state, xhr) {
+                            $.ajax({
+                                method: "POST",
+                                url: "/manageUser/add/" + newmail + "/" + dataSet.email + "/" + Role
+                            }).done(function (data, state, xhr) {
+                                $(".btn-sm").hide();
+                                $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
+
+                                $(".alertText").html(data)
+                                $("#alertmodal").modal();
+
+                            }).fail(function (xhr, state, error) {
+                                //get data failed
+
+                                $(".alertText").html("มีผู้ใช้นี้แล้ว")
+                                $("#alertmodal").modal();
+                            });
+
+
                         }).fail(function (xhr, state, error) {
                             //get data failed
-                            
-                            $(".alertText").html("มีผู้ใช้นี้แล้ว")
-                        $("#alertmodal").modal();
+                            $(".alertText").html(xhr.responseText)
+                            $("#alertmodal").modal();
                         });
-                        
-                    }).fail(function (xhr, state, error) {
-                        //get data failed
-                        $(".alertText").html(xhr.responseText)
-                        $("#alertmodal").modal();
-                    });
-                    }else{
+                    } else {
                         $(".alertText").html("รูปแบบอีเมลไม่ถูกต้อง")
                         $("#alertmodal").modal();
                     }
 
 
- 
+
                 }
 
                 $(".modal").modal("hide");
-           
+
             });
 
             $.ajax({
@@ -252,13 +254,13 @@
                             window.location.replace("/checkpage")
                         }
                         for (let i = 0; i < dataSet.length; i++) {
-                            if (dataSet[i].role == 2) {
-                                dataSet[i].role = "กรรมการ"
-                            } else if (dataSet[i].role == 1) {
-                                dataSet[i].role = "ผู้ดูแลระบบ"
+                            if (dataSet[i].Role == 2) {
+                                dataSet[i].Role = "กรรมการ"
+                            } else if (dataSet[i].Role == 1) {
+                                dataSet[i].Role = "ผู้ดูแลระบบ"
                             }
                         }
-                        $("#rol2").html(dataSet[0].role)
+                        $("#rol2").html(dataSet[0].Role)
 
 
 
@@ -277,7 +279,7 @@
                 columns: [
                     { data: "Email_user", title: "ผู้ใช้" },
                     { data: "Email_assigner", title: "ผู้แต่งตั้ง" },
-                    { data: "role", title: "หน้าที่" },
+                    { data: "Role", title: "หน้าที่" },
                     {
                         "targets": -1,
                         "data": null,
@@ -292,7 +294,7 @@
             $('#myTable tbody').on('click', 'button', function () {
                 var data = table.row($(this).parents('tr')).data();
                 Email_user = data.Email_user;
-                rol = data.role;
+                rol = data.Role;
                 $("#editMail").val(Email_user)
                 $.ajax({
                     method: "GET",
@@ -303,13 +305,13 @@
                         url: "/user/profile/inspectedItem/Total/Number1/" + Email_user
                     }).done(function (dataSet, state, xhr) {
                         if (dataSet[0].Numbers_of_Inspected_Item == 0) {
-                           
+
                             $(".modalH").modal();
                         } else {
-                        $(".btn-sm").hide();
-                        $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
-                        $(".alertText").html("ผู้ใช้นี้ได้เริ่มตรวจนับแล้ว")
-                        $("#alertmodal").modal();
+                            $(".btn-sm").hide();
+                            $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
+                            $(".alertText").html("ผู้ใช้นี้ได้เริ่มตรวจนับแล้ว")
+                            $("#alertmodal").modal();
 
                         }
                     }).fail(function (xhr, state, error) {
@@ -604,9 +606,9 @@
     <!-- modal  -->
     <!-- ============================================================== -->
 
-    <div class="modal fade bd-example-modal-sm modalH" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    <div class="modal fade bd-example-modal-sm modalH" tabindex="-1" Role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" Role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">แก้ไขผู้ใช้</h5>
@@ -636,9 +638,9 @@
     <!-- modal2  -->
     <!-- ============================================================== -->
 
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" Role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" Role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">เพิ่มผู้ใช้</h5>
@@ -667,22 +669,24 @@
     <!-- เสร็จ modal2  -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
-    <div class="modal bd-example-modal-sm fade" id="alertmodal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content"  style="background-color : #3f3f3f">
-            <div class="modal-body">
-                <h5 style="color: #ffffff; font-weight:bold;">ประกาศ</h5>
-                <p class="alertText" style="color: white"></p>
-                <div class="but"></div>
-                <input class="btn btn-sm" type="button" value = "ตกลง" data-dismiss="modal" style="float: right; background-color: #0a72c1; color:white">
-             
+    <div class="modal bd-example-modal-sm fade" id="alertmodal" tabindex="-1" Role="dialog"
+        aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog" Role="document">
+            <div class="modal-content" style="background-color : #3f3f3f">
+                <div class="modal-body">
+                    <h5 style="color: #ffffff; font-weight:bold;">ประกาศ</h5>
+                    <p class="alertText" style="color: white"></p>
+                    <div class="but"></div>
+                    <input class="btn btn-sm" type="button" value="ตกลง" data-dismiss="modal"
+                        style="float: right; background-color: #0a72c1; color:white">
+
+                </div>
+
+
             </div>
-              
-            
-          </div>
         </div>
-      </div>
-     <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
     <!-- เสร็จ modal  -->
     <!-- ============================================================== -->
 
