@@ -75,10 +75,10 @@
                     }).done(function (dataSet, state, xhr) {
 
                         for (let i = 0; i < dataSet.length; i++) {
-                            if (dataSet[i].role == 2) {
-                                dataSet[i].role = "กรรมการ"
-                            } else if (dataSet[i].role == 1) {
-                                dataSet[i].role = "ผู้ดูแลระบบ"
+                            if (dataSet[i].Role == 2) {
+                                dataSet[i].Role = "กรรมการ"
+                            } else if (dataSet[i].Role == 1) {
+                                dataSet[i].Role = "ผู้ดูแลระบบ"
                             }
                             var nf = new Intl.NumberFormat();
                             dataSet[i].Original_value = nf.format(dataSet[i].Original_value);
@@ -98,10 +98,10 @@
                 }).done(function (dataSet, state, xhr) {
 
                     for (let i = 0; i < dataSet.length; i++) {
-                        if (dataSet[i].role == 2) {
-                            dataSet[i].role = "กรรมการ"
-                        } else if (dataSet[i].role == 1) {
-                            dataSet[i].role = "ผู้ดูแลระบบ"
+                        if (dataSet[i].Role == 2) {
+                            dataSet[i].Role = "กรรมการ"
+                        } else if (dataSet[i].Role == 1) {
+                            dataSet[i].Role = "ผู้ดูแลระบบ"
                         }
                         var nf = new Intl.NumberFormat();
                         dataSet[i].Original_value = nf.format(dataSet[i].Original_value);
@@ -181,7 +181,7 @@
 
             $("#save2").click(function () {
                 let newmail = $("#addMail2").val();
-                let role;
+                let Role;
                 if (!newmail || newmail.length === 0) {
                     $(".alertText").html("กรุณากรอกอีเมล")
                     $("#alertmodal").modal();
@@ -189,9 +189,9 @@
                     if(newmail.match(pattern)){
                         var x = document.getElementById("admin").checked;
                     if (x) {
-                        role = 1;
+                        Role = 1;
                     } else {
-                        role = 2
+                        Role = 2
                     }
 
 
@@ -201,7 +201,7 @@
                     }).done(function (dataSet, state, xhr) {
                         $.ajax({
                             method: "POST",
-                            url: "/manageUser/add/" + newmail + "/" + dataSet.email + "/" + role
+                            url: "/manageUser/add/" + newmail + "/" + dataSet.email + "/" + Role
                         }).done(function (data, state, xhr) {
                         $(".btn-sm").hide();
                         $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
@@ -252,13 +252,13 @@
                             window.location.replace("/checkpage")
                         }
                         for (let i = 0; i < dataSet.length; i++) {
-                            if (dataSet[i].role == 2) {
-                                dataSet[i].role = "กรรมการ"
-                            } else if (dataSet[i].role == 1) {
-                                dataSet[i].role = "ผู้ดูแลระบบ"
+                            if (dataSet[i].Role == 2) {
+                                dataSet[i].Role = "กรรมการ"
+                            } else if (dataSet[i].Role == 1) {
+                                dataSet[i].Role = "ผู้ดูแลระบบ"
                             }
                         }
-                        $("#rol2").html(dataSet[0].role)
+                        $("#rol2").html(dataSet[0].Role)
 
 
 
@@ -277,7 +277,7 @@
                 columns: [
                     { data: "Email_user", title: "ผู้ใช้" },
                     { data: "Email_assigner", title: "ผู้แต่งตั้ง" },
-                    { data: "role", title: "หน้าที่" },
+                    { data: "Role", title: "หน้าที่" },
                     {
                         "targets": -1,
                         "data": null,
@@ -292,7 +292,7 @@
             $('#myTable tbody').on('click', 'button', function () {
                 var data = table.row($(this).parents('tr')).data();
                 Email_user = data.Email_user;
-                rol = data.role;
+                rol = data.Role;
                 $("#editMail").val(Email_user)
                 $.ajax({
                     method: "GET",
@@ -604,9 +604,9 @@
     <!-- modal  -->
     <!-- ============================================================== -->
 
-    <div class="modal fade bd-example-modal-sm modalH" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    <div class="modal fade bd-example-modal-sm modalH" tabindex="-1" Role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" Role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">แก้ไขผู้ใช้</h5>
@@ -636,9 +636,9 @@
     <!-- modal2  -->
     <!-- ============================================================== -->
 
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" Role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" Role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">เพิ่มผู้ใช้</h5>
@@ -667,8 +667,8 @@
     <!-- เสร็จ modal2  -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
-    <div class="modal bd-example-modal-sm fade" id="alertmodal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal bd-example-modal-sm fade" id="alertmodal" tabindex="-1" Role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog" Role="document">
           <div class="modal-content"  style="background-color : #3f3f3f">
             <div class="modal-body">
                 <h5 style="color: #ffffff; font-weight:bold;">ประกาศ</h5>
