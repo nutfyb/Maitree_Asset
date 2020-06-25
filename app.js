@@ -56,8 +56,8 @@ const upload = multer({ storage: storageOption }).single("filetoupload");
 // console.log(myDate)
 // console.log(myTime);
 // // getDateTime
-// function getDateTime(year,month,day,hour,minute){
-//     var inputDate = ("'"+year+'-'+month+'-'+day+'T'+hour+':'+minute+':00'+"'");
+// function getDateTime(Year,month,day,hour,minute){
+//     var inputDate = ("'"+Year+'-'+month+'-'+day+'T'+hour+':'+minute+':00'+"'");
 //     var convertedDate = new Date(inputDate);
 //     console.log(convertedDate);
 // };
@@ -238,9 +238,9 @@ function importfromexel(res, filePath, email) {
         console.log(rows);
         const date = new Date();
         rows.shift();
-        const year = new Date().getFullYear();
+        const Year = new Date().getFullYear();
         const sql = "DELETE FROM item WHERE Year = ? ;"
-        con.query(sql, [year], function (err, result, fields) {
+        con.query(sql, [Year], function (err, result, fields) {
             if (err) {
                 res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
                 console.log(err)
@@ -317,8 +317,8 @@ app.put("/item/addImage", function (req, res) {
 // Load info of all user 
 app.get("/manageUser/showAllUsers/:Email_user", function (req, res) {
     const Email_user = req.params.Email_user;
-    // const year =  new Date().getFullYear();
-    const sql = "select Year,Email_user,Email_assigner,Role from year_user WHERE Email_user = ?"
+    // const Year =  new Date().getFullYear();
+    const sql = "select Year,Email_user,Email_assigner,Role from Year_user WHERE Email_user = ?"
 
     con.query(sql, [Email_user], function (err, result, fields) {
         if (err) {
@@ -345,10 +345,10 @@ app.get("/user/profile/inspectedItem/Total/Number1/:Email_Committee", function (
 
 // Loadnumber people scan in that day
 app.get("/user/datescan", function (req, res) {
-    const year =  new Date().getFullYear();
+    const Year =  new Date().getFullYear();
     const sql = "SELECT Date_Scan FROM item WHERE Year = ? ;"
 
-    con.query(sql,[year], function (err, result, fields) {
+    con.query(sql,[Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -385,9 +385,9 @@ app.get("/user/profile/inspectedItem/:Status/:Email_Committee", function (req, r
         }
     })
 });
-// Load year
-app.get("/year/user", function (req, res) {
-    const sql = "SELECT DISTINCT Year FROM year_user"
+// Load Year
+app.get("/Year/user", function (req, res) {
+    const sql = "SELECT DISTINCT Year FROM Year_user"
 
 
     con.query(sql, function (err, result, fields) {
@@ -401,11 +401,11 @@ app.get("/year/user", function (req, res) {
 
 // Load date scan
 app.get("/datescan/user", function (req, res) {
-    const year =  new Date().getFullYear();
+    const Year =  new Date().getFullYear();
     const sql = "SELECT DISTINCT Date_Scan FROM item where Year = ? ORDER BY Date_scan"
 
 
-    con.query(sql,[year], function (err, result, fields) {
+    con.query(sql,[Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -414,8 +414,8 @@ app.get("/datescan/user", function (req, res) {
     })
 });
 
-// Load year
-app.get("/year/iteem", function (req, res) {
+// Load Year
+app.get("/Year/iteem", function (req, res) {
     const sql = "SELECT DISTINCT Year FROM item ORDER BY Year"
 
 
@@ -430,14 +430,30 @@ app.get("/year/iteem", function (req, res) {
 
 // Add info of new user in manage user page
 app.put("/manageUser/update/:Email_user/:Email_assigner/:Role/:Email_useru", function (req, res) {
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const Email_user = req.params.Email_user;
     const Email_assigner = req.params.Email_assigner;
-    const role = req.params.role;
+    const Role = req.params.Role;
     const Email_useru = req.params.Email_useru;
 
-    const sql = "UPDATE year_user SET year = ?,Email_user = ?,Email_assigner = ?,role = ? WHERE Email_user = ?;";
-    con.query(sql, [year, Email_user, Email_assigner, role, Email_useru], function (err, result, fields) {
+    const sql = "UPDATE Year_user SET Year = ?,Email_user = ?,Email_assigner = ?,Role = ? WHERE Email_user = ?;";
+    con.query(sql, [Year, Email_user, Email_assigner, Role, Email_useru], function (err, result, fields) {
+        if (err) {
+            res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
+        }
+        else {
+            res.send("แก้ไขข้อมูลเรียบร้อย");
+        }
+    })
+});
+
+// add name to database
+app.put("/manageUser/updatename/:Name/:Email_user", function (req, res) {
+    const Name = req.params.Name;
+    const Email_user = req.params.Email_user;
+
+    const sql = "UPDATE Year_user SET Name = ? WHERE Email_user = ?;";
+    con.query(sql, [Name, Email_user], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         }
@@ -450,7 +466,7 @@ app.put("/manageUser/update/:Email_user/:Email_assigner/:Role/:Email_useru", fun
 // Load email of user
 app.get("/user/index/info/emailUser/:Email_user", function (req, res) {
     const Email_user = req.params.Email_user;
-    const sql = "SELECT Email_user FROM `year_user` WHERE Email_user=?;"
+    const sql = "SELECT Email_user FROM `Year_user` WHERE Email_user=?;"
 
     con.query(sql, [Email_user], function (err, result, fields) {
         if (err) {
@@ -490,11 +506,11 @@ app.get("/item/dashboard/showAllInfo", function (req, res) {
 
 // Load all item for import
 app.get("/item/dashboard/showuser", function (req, res) {
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
 
     const sql = "select DISTINCT Status from item WHERE Year = ?;"
 
-    con.query(sql, [year], function (err, result, fields) {
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -522,9 +538,9 @@ app.get("/item/dashboard/showAllInfo/:location", function (req, res) {
 // Load item numbers
 app.get("/item/dashboard/number/:status", function (req, res) {
     const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item WHERE Status=?;"
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const status = req.params.status;
-    con.query(sql, [status, year], function (err, result, fields) {
+    con.query(sql, [status, Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -536,8 +552,8 @@ app.get("/item/dashboard/number/:status", function (req, res) {
 // Load item numbers
 app.get("/item/dashboard/number", function (req, res) {
     const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item ;"
-    const year = new Date().getFullYear();
-    con.query(sql, [year], function (err, result, fields) {
+    const Year = new Date().getFullYear();
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -546,12 +562,12 @@ app.get("/item/dashboard/number", function (req, res) {
     })
 });
 
-// Load item numbers with year
-app.get("/item/dashboard/number2/:status/:year", function (req, res) {
+// Load item numbers with Year
+app.get("/item/dashboard/number2/:status/:Year", function (req, res) {
     const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item WHERE Status=? AND Year = ?;"
-    const year = req.params.year;
+    const Year = req.params.Year;
     const status = req.params.status;
-    con.query(sql, [status, year], function (err, result, fields) {
+    con.query(sql, [status, Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -560,11 +576,11 @@ app.get("/item/dashboard/number2/:status/:year", function (req, res) {
     })
 });
 
-// Load item numbers year
-app.get("/item/dashboard/number1/:year", function (req, res) {
+// Load item numbers Year
+app.get("/item/dashboard/number1/:Year", function (req, res) {
     const sql = "SELECT count(Status) AS 'Numbers_of_item' FROM item WHERE Year = ?;"
-    const year = req.params.year;
-    con.query(sql, [year], function (err, result, fields) {
+    const Year = req.params.Year;
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -615,7 +631,7 @@ app.get("/item/dashboard/showAllInfo1/:status", function (req, res) {
     })
 });
 
-// // Load year
+// // Load Year
 app.get("/item/Year", function (req, res) {
     const sql = "SELECT DISTINCT Year FROM item"
 
@@ -629,12 +645,12 @@ app.get("/item/Year", function (req, res) {
     })
 });
 
-// Load all item info with year
+// Load all item info with Year
 app.get("/item/dashboard/showAllInfo4/:Year", function (req, res) {
-    const year = req.params.Year;
+    const Year = req.params.Year;
     const sql = "select * from item WHERE Year = ?"
 
-    con.query(sql, [year], function (err, result, fields) {
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -674,9 +690,9 @@ app.get("/item/dashboard/showAllInfo3/:Email_Committee", function (req, res) {
 // Load item info
 app.get("/item/:status", function (req, res) {
     const sql = "select Image,Asset_Number,Model,Serial,Location,Received_date,Original_value,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status from item where Status=? AND Year =?"
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const status = req.params.status;
-    con.query(sql, [status, year], function (err, result, fields) {
+    con.query(sql, [status, Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -684,13 +700,13 @@ app.get("/item/:status", function (req, res) {
         }
     })
 });
-// UPDATE item,year_user SET item.Status=? where item.Asset_Number=? AND year_user.Email_user=?
+// UPDATE item,Year_user SET item.Status=? where item.Asset_Number=? AND Year_user.Email_user=?
 // For print barcode or QR code of item
 app.get("/item/forPrintQRcode_Barcode/:Email_Committee", function (req, res) {
-    const sql = "select Asset_Number, Asset_Description, Received_date, Department, Year,Status, Image from item where year=? and Email_Committee=?;"
-    const year = new Date().getFullYear();
+    const sql = "select Asset_Number, Asset_Description, Received_date, Department, Year,Status, Image from item where Year=? and Email_Committee=?;"
+    const Year = new Date().getFullYear();
     const Email_Committee = req.params.Email_Committee;
-    con.query(sql, [year, Email_Committee], function (err, result, fields) {
+    con.query(sql, [Year, Email_Committee], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -740,9 +756,9 @@ app.get("/landing2/showSomeInfo", function (req, res) {
 
 // Load item number all in database
 app.get("/item/numberAll", function (req, res) {
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const sql = "SELECT count(Status) AS 'Numbers_of_Inspected_Item' FROM item WHERE Year = ?"
-    con.query(sql, [year], function (err, result, fields) {
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -753,10 +769,10 @@ app.get("/item/numberAll", function (req, res) {
 
 // Load date and time of job
 app.get("/dateTime/showDateTime", function (req, res) {
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const sql = "select * from date_check where Years = ?"
 
-    con.query(sql, [year], function (err, result, fields) {
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -768,9 +784,9 @@ app.get("/dateTime/showDateTime", function (req, res) {
 // Load info of main datatable page
 app.get("/maindataTable/info/:status", function (req, res) {
     const sql = "select Image,Asset_Description,Asset_Number,Model,Serial,Location,Received_date,Original_value,Cost_center,Room,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status,Date_Scan from item where Year=? and Status=?"
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const status = req.params.status;
-    con.query(sql, [year, status], function (err, result, fields) {
+    con.query(sql, [Year, status], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -784,7 +800,7 @@ app.put("/item/edit", function (req, res) {
     const Status = req.body.Status;
     const Asset_Number = req.body.Asset_Number;
     const Email_user = req.body.Email_user;
-    const sql = "UPDATE item,year_user SET item.Status=? where item.Asset_Number=? AND year_user.Email_user=?;"
+    const sql = "UPDATE item,Year_user SET item.Status=? where item.Asset_Number=? AND Year_user.Email_user=?;"
     con.query(sql, [Status, Asset_Number, Email_user], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
@@ -796,11 +812,11 @@ app.put("/item/edit", function (req, res) {
 });
 
 // Load info of all user of manage user page
-app.get("/manageUser/showAllUser/:year", function (req, res) {
-    const year = req.params.year;
-    const sql = "select Year,Email_user,Email_assigner,Role from year_user WHERE Year=?"
+app.get("/manageUser/showAllUser/:Year", function (req, res) {
+    const Year = req.params.Year;
+    const sql = "select Year,Email_user,Email_assigner,Role,Name from Year_user WHERE Year=?"
 
-    con.query(sql, [year], function (err, result, fields) {
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -811,13 +827,13 @@ app.get("/manageUser/showAllUser/:year", function (req, res) {
 
 // Add info of new user in manage user page
 app.post("/manageUser/add/:Email_user/:Email_assigner/:Role", function (req, res) {
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const Email_user = req.params.Email_user;
     const Email_assigner = req.params.Email_assigner;
-    const role = req.params.role;
+    const Role = req.params.Role;
 
-    const sql = "INSERT INTO year_user(Year,Email_user,Email_assigner,Role) VALUES (?,?,?,?)";
-    con.query(sql, [year, Email_user, Email_assigner, role], function (err, result, fields) {
+    const sql = "INSERT INTO Year_user(Year,Email_user,Email_assigner,Role) VALUES (?,?,?,?)";
+    con.query(sql, [Year, Email_user, Email_assigner, Role], function (err, result, fields) {
         if (err) {
             console.error(err.message);
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
@@ -839,9 +855,9 @@ app.post("/manageUser/add/:Email_user/:Email_assigner/:Role", function (req, res
 // Load item info landing 2
 app.get("/item5/:Asset_Number", function (req, res) {
     const sql = "SELECT Image,Asset_Number,Model,Serial,Location,Received_date,Asset_Description,Room,Original_value,Cost_center,Department,Vendor_name,Date_Upload,Date_scan,Email_Committee,Status,Date_Scan FROM `item` WHERE `Asset_Number` =? AND Year =?"
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const Asset_Number = req.params.Asset_Number;
-    con.query(sql, [Asset_Number, year], function (err, result, fields) {
+    con.query(sql, [Asset_Number, Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -851,9 +867,9 @@ app.get("/item5/:Asset_Number", function (req, res) {
 });
 
 app.get("/numberitem", function (req, res) {
-    const year = new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const sql = "SELECT count(Asset_Number) AS numofitem FROM item WHERE Year = ?"
-    con.query(sql, [year], function (err, result, fields) {
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -865,13 +881,13 @@ app.get("/numberitem", function (req, res) {
 
 // Insert Work Time
 app.post("/dateTime/insertTime/:Date_start/:Date_end", function (req, res) {
-    // ฟิค years ไว้ใน database ทำให้ไม่สามารถใส่ปีซ้ำได้
-    const years = new Date().getFullYear();
+    // ฟิค Years ไว้ใน database ทำให้ไม่สามารถใส่ปีซ้ำได้
+    const Years = new Date().getFullYear();
     const Date_start = req.params.Date_start;
     const Date_end = req.params.Date_end;
 
     const sql = "INSERT INTO date_check(Years,Date_start,Date_end) VALUES (?,?,?)";
-    con.query(sql, [years, Date_start, Date_end], function (err, result, fields) {
+    con.query(sql, [Years, Date_start, Date_end], function (err, result, fields) {
         if (err) {
             console.error(err.message);
             res.status(503).send("ไม่สามารถเพิ่มข้อมูลได้ เนื่องจากมีข้อมูลของปีนี้อยู่ในระบบแล้ว");
@@ -893,11 +909,11 @@ app.post("/dateTime/insertTime/:Date_start/:Date_end", function (req, res) {
 
 // Update date
 app.put("/dateTime/updateTime/:Date_start/:Date_end", function (req, res) {
-    const years = new Date().getFullYear();
+    const Years = new Date().getFullYear();
     const Date_start = req.params.Date_start;
     const Date_end = req.params.Date_end;
     const sql = "UPDATE date_check SET Date_start=?, Date_end=? where Years=?;"
-    con.query(sql, [Date_start, Date_end, years], function (err, result, fields) {
+    con.query(sql, [Date_start, Date_end, Years], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         }

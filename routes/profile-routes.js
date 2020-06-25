@@ -17,7 +17,7 @@ router.use(authCheck);
 //     res.send({user: req.user});
 // });
 router.get("/infouser", function (req, res) {
-            // console.log(req.user);
+            //console.log(req.user);
             res.send(req.user);
 });
 
