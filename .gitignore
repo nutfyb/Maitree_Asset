@@ -3,7 +3,7 @@ node_modules/
 # server.rest
 # public/
 upload/
-# _DS_Store
+ _DS_Store
 README.md
 package-lock.json
 key.js
