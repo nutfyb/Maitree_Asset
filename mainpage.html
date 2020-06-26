@@ -68,12 +68,13 @@
                         method: "GET",
                         url: "/manageUser/showAllUsers/" + data.email
                     }).done(function (dataSet, state, xhr) {
+                        console.log(dataSet)
                         if (dataSet[0] === undefined) {
 
                             window.location.replace("/checkpage")
                         }
-                        if (dataSet[0].role == 2) {
-                            $("#manag").hide();
+                        if (dataSet[0].Role == 2) {
+                            $("#managUser").hide();
                             $("#manageu").hide();
                         }
                         for (let i = 0; i < dataSet.length; i++) {
@@ -99,7 +100,7 @@
                             method: "PUT",
                             url: "/manageUser/updatename/"+data.name+"/"+data.email
                         }).done(function (data, state, xhr) {
-                        alert (data.name)
+                        // alert (data.name)
                         
                         }).fail(function (xhr, state, error) {
                             //get data failed
@@ -175,7 +176,7 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav flex-column">
 
-                            <li class="nav-item ">
+                            <li class="nav-item">
                                 <a class="nav-link active" href="/mainpage" aria-expanded="false"><i
                                         class="fa fa-home"></i>หน้าหลัก
                                 </a>
@@ -196,8 +197,18 @@
                             </li>
 
                             <li class="nav-item ">
-                                <a class="nav-link " href="/dashboard" aria-expanded="false"><i
+                                <a class="nav-link" href="/dashboard" aria-expanded="false"><i
                                         class="fa fa-dashboard"></i>แดชบอร์ด </a>
+                                <div id="submenu-1" class="collapse submenu">
+                                    <ul class="nav flex-column">
+
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="nav-item ">
+                                <a class="nav-link" href="/asset" aria-expanded="false"><i
+                                        class="fa fa-archive"></i>ครุภัณฑ์ </a>
                                 <div id="submenu-1" class="collapse submenu">
                                     <ul class="nav flex-column">
 
@@ -223,6 +234,7 @@
                                 <div id="submenu-1" class="collapse submenu">
                                     <ul class="nav flex-column">
                                     </ul>
+
                                 </div>
                             </li>
                         </ul>

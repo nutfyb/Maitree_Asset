@@ -114,6 +114,11 @@ app.get("/User_history", function (req, res) {
     res.sendFile(path.join(__dirname, "/User_history.html"))
 });
 
+//Return Aseet page
+app.get("/asset", function (req, res) {
+    res.sendFile(path.join(__dirname, "/asset.html"))
+});
+
 //Return dashboard page
 app.get("/dashboard", function (req, res) {
     res.sendFile(path.join(__dirname, "/dashboard.html"))

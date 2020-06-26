@@ -362,7 +362,7 @@
                         <ul class="navbar-nav flex-column">
 
                             <li class="nav-item ">
-                                <a class="nav-link " href="/mainpage" aria-expanded="false"><i
+                                <a class="nav-link" href="/mainpage" aria-expanded="false"><i
                                         class="fa fa-home"></i>หน้าหลัก
                                 </a>
                                 <div id="submenu-1" class="collapse submenu">
@@ -392,6 +392,16 @@
                             </li>
 
                             <li class="nav-item ">
+                                <a class="nav-link" href="/asset" aria-expanded="false"><i
+                                        class="fa fa-archive"></i>ครุภัณฑ์ </a>
+                                <div id="submenu-1" class="collapse submenu">
+                                    <ul class="nav flex-column">
+
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="nav-item" id="manageu">
                                 <a class="nav-link " href="/manageUser" aria-expanded="false"><i
                                         class="fa fa-edit"></i>จัดการผู้ใช้
                                 </a>
@@ -402,13 +412,14 @@
                                 </div>
                             </li>
 
-                            <li class="nav-item " id="manageu">
+                            <li class="nav-item ">
                                 <a class="nav-link " href="/Date_manage" aria-expanded="false"><i
                                         class="fa fa-clock"></i>จัดการเวลา
                                 </a>
                                 <div id="submenu-1" class="collapse submenu">
                                     <ul class="nav flex-column">
                                     </ul>
+
                                 </div>
                             </li>
                         </ul>
@@ -422,34 +433,36 @@
         <!-- ============================================================== -->
 
 
-        <div class="dashboard-wrapper mt-5">
+        <div class="dashboard-wrapper">
             <div class="dashboard-finance">
                 <div class="container-fluid dashboard-content">
                     <!-- ============================================================== -->
                     <!-- หัวกระดาษ  -->
                     <!-- ============================================================== -->
                     <div class="row">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="section-block" id="cards">
 
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
-                            <br>
+                            <h3 class="mb-2 ml-5 ">กิจกรรม </h3>
+                            <!-- <br> -->
                             <div class="card-body mt-5" style=" background-color: #fff; height: 13cm;">
                                 <img class="card-img-top img-fluid" id="pic1" src="img/Pixels.png" alt="Card image cap"
                                     width="250" height="236">
                                 <div class="card-body ">
                                     <h3 class="card-title" id="name" style="text-align: center;">รุตาทร วรพัทธ์ธดา</h3>
                                     <p class="card-text" style="text-align: center;" id="rol">Admin
-                                    <h6 class="card-text" id="mail" style="text-align: left;">บลาๆๆๆ@gmail.com</h6>
+                                        <h6 class="card-text" id="mail" style="text-align: left;">บลาๆๆๆ@gmail.com</h6>
                                 </div>
 
                             </div>
                         </div>
-                        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
+                        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9 mt-5">
                             <div class="page-header">
-                                <h3 class="mb-2 ">กิจกรรม </h3> <br>
+                                <!-- <h3 class="mb-2 ">กิจกรรม </h3>  -->
+                                <br>
 
                                 <div class="row mt-3">
                                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 ">
@@ -519,8 +532,8 @@
                                         <div class="btn-group" role="group">
                                             <div class="commitee"></div>
                                         </div>
-                                        <a href="/User_history">
-                                            <button type="button" href="#" class="btn "
+                                        <a href="/User_history" class="mt-2">
+                                            <button type="button" href="#" class="btn"
                                                 style="color: red;">ล้างการกรองทั้งหมด</button></a>
                                     </div>
 

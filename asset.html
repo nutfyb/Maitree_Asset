@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
@@ -37,7 +36,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
-    <title>นับครุภัณฑ์</title>
+    <title>ครุภัณฑ์</title>
 
     <script>
         var table
@@ -65,11 +64,11 @@
                 }).done(function (data, state, xhr) {
 
                     if (data.length > 1) {
-                        // $(".btn-sm").hide();
-                        // $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
-                        // $(".alertText").html("ปีนี้ได้ทำการตรวจนับแล้ว จึงไม่สามารถนำเข้าไฟล์เพิ่มเติม")
-                        // $("#alertmodal").modal();
-                        // $("#upload").modal("hide");
+                        $(".btn-sm").hide();
+                        $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
+                        $(".alertText").html("ปีนี้ได้ทำการตรวจนับแล้ว จึงไม่สามารถนำเข้าไฟล์เพิ่มเติม")
+                        $("#alertmodal").modal();
+                        $("#upload").modal("hide");
                     } else {
                         $.ajax({
                             method: "GET",
@@ -732,19 +731,6 @@
             });
         }
     </script>
-    <style>
-        .morris-hover.morris-default-style {
-            border-radius: 10px;
-            padding: 6px;
-            color: #000000;
-            background: rgb(255, 255, 255);
-            border: solid 2px rgb(230, 230, 230);
-            font-family: sans-serif;
-            font-size: 12px;
-            text-align: center;
-        }
-    </style>
-
 
 </head>
 
@@ -828,7 +814,7 @@
                             </li>
 
                             <li class="nav-item ">
-                                <a class="nav-link active" href="/dashboard" aria-expanded="false"><i
+                                <a class="nav-link" href="/dashboard" aria-expanded="false"><i
                                         class="fa fa-dashboard"></i>แดชบอร์ด </a>
                                 <div id="submenu-1" class="collapse submenu">
                                     <ul class="nav flex-column">
@@ -838,7 +824,7 @@
                             </li>
 
                             <li class="nav-item ">
-                                <a class="nav-link" href="/asset" aria-expanded="false"><i
+                                <a class="nav-link active" href="/asset" aria-expanded="false"><i
                                         class="fa fa-archive"></i>ครุภัณฑ์ </a>
                                 <div id="submenu-1" class="collapse submenu">
                                     <ul class="nav flex-column">
@@ -878,7 +864,7 @@
         <!-- เสร็จ navbar -->
         <!-- ============================================================== -->
 
-        <div class="dashboard-wrapper" style="background-color:rgba(255, 255, 255, 0.768)">
+        <div class="dashboard-wrapper " style="background-color:rgba(255, 255, 255, 0.768)">
             <div class="dashboard-finance">
                 <div class="container-fluid dashboard-content">
                     <!-- ============================================================== -->
@@ -886,19 +872,19 @@
                     <!-- ============================================================== -->
                     <div class="row">
                         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
-                            <div class="page-header ml-5 ">
-                                <h3 class="mb-2 ">แดชบอร์ด </h3>
+                            <div class="page-header ml-5">
+                                <h3 class="mb-2 ">ครุภัณฑ์ </h3>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
                             <!-- ======================================================== -->
                             <!-- ดรอปดาว -->
                             <!-- ======================================================== -->
-                            <div class="input-group mb-3">
+                            <div class="input-group">
                                 <div class="input-group-append be-addon">
                                     <div class="btn-group" role="group">
                                         <div class="year">
-
+                                            <!-- <div class="form-control"></div> -->
                                         </div>
                                     </div>
 
@@ -908,68 +894,7 @@
                     </div>
 
                 </div>
-                <div class="row ml-3">
-                    <div class=" col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
-
-                    </div>
-                    <div class="card col-xl-2 col-lg-2 col-md-2 col-sm-2 col-1 mr-5" style="background-color:#eeefff">
-                        <div class="card-body " style="height: 3cm; width: 5cm;">
-                            <div class="row">
-                                <div class="col-xl-8.9 col-lg-8.9  col-md-8.9  col-sm-8.9  col-8.9  ">
-                                    <b style="color: #000000;">ครุภัณฑ์ทั้งหมด</b>
-                                    <h1 id="all">5000</h1>
-                                </div>
-                                <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 ml-4">
-                                    <img class="" src="img/all.PNG " alt="" style="width:0.99cm;">
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <div class="card col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 mr-5 "
-                        style="background-color: #e7f5ee;">
-                        <div class="card-body pr-4" style="height: 3cm; width: 5cm;">
-                            <div class="row">
-                                <div class="col-xl-8.9 col-lg-8.9  col-md-8.9  col-sm-8.9  col-8.9 ml-4  ">
-                                    <a style="color: black;">ครุภัณฑ์ปกติ</a>
-                                    <h1 id="normal">5000</h1>
-                                </div>
-                                <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 ml-4">
-                                    <img class="" src="img/normal.png" alt="" style="width:0.99cm;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 mr-5 "
-                        style="background-color: #f9f2d5;">
-                        <div class="card-body pr-4" style="height: 3cm; width: 5cm;">
-                            <div class="row">
-                                <div class="col-xl-8.9 col-lg-8.9  col-md-8.9  col-sm-8.9  col-8.9  ">
-                                    <a style="color: black;">ครุภัณฑ์ส่งซ่อม</a>
-                                    <h1 id="fix">5000</h1>
-                                </div>
-                                <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 ml-4">
-                                    <img class="" src="img/fix.PNG" alt="" style="width:0.99cm;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 mr-5" style="background-color: #fbe1d3;">
-                        <div class="card-body pr-4" style="height: 3cm; width: 5cm;">
-                            <div class="row">
-                                <div class="col-xl-8.9 col-lg-8.9  col-md-8.9  col-sm-8.9  col-8.9  ">
-                                    <a style="color: #000000;">ครุภัณฑ์สูญหาย</a>
-                                    <h1 id="dis">5000</h1>
-                                </div>
-                                <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 ml-4">
-                                    <img class="" src="img/dis.PNG" alt="" style="width:0.99cm;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+               
                 <!-- ============================================================== -->
                 <!-- เสร็จหัวกระดาษ  -->
                 <!-- ============================================================== -->
@@ -977,16 +902,117 @@
                 <!-- ============================================================== -->
                 <!--กราฟ-->
                 <!-- ============================================================== -->
-                <div class="col">
-                    <div class="row ">
-                        <div class=" col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 ml-5 border "
-                            style="background-color: white;border: 5px solid red;">
-                            <div id="bar-chart" class="my-3"></div>
+                <div class="row">
+                    <!-- <div class="row ">
+                        <div class=" col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 ml-5 "
+                            style="background-color: white">
+                            <div id="bar-chart"></div>
+                        </div>
+                    </div> -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- ตารางข้อมูล -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <div class="container my-2 " style="background-color: white;">
+                        <br>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+
+
+                            <div class="btn-group" role="group">
+                                <div class="btnGroupDrop1"></div>
+
+                            </div>
+
+
+                            <div class="btn-group" role="group">
+                                <div class="btnGroupDrop2"></div>
+                            </div>
+
+                            <div class="btn-group" role="group">
+                                <div class="commitee"></div>
+                            </div>
+                            <a href="/asset" class="mt-2">
+                                <button type="button" href="#" class="btn "
+                                    style="color: red;">ล้างการกรองทั้งหมด</button></a><br><br>
+
+                        </div>
+                        <button class="btn mt-2" class="btn btn-primary" data-toggle="modal" data-target="#upload"
+                            id="import">นำเข้าไฟล์</button>
+                        <button class="btn mt-2" class="btn btn-primary" data-toggle="modal" data-target="#modalPushExcel"
+                            id="#">นำออกไฟล์</button>
+                        <button class="btn mt-2" id="qrcode">สร้างรหัส QR</button>
+                        <button class="btn mt-2" id="take">ตั้งค่าการถ่ายรูป</button>
+
+                        <br><br><br>
+                        <table id="myTable" class="table table-striped table-bordered mt-3" style="width:100%">
+                        </table>
+                    </div>
+
+                    <!-- ============================================================== -->
+                    <!-- จบตาราง -->
+                    <!--Modal: Export to excel-->
+                    <div class="modal fade" id="modalPushExcel" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-notify modal-info" role="document">
+                            <!--Content-->
+                            <div class="modal-content text-center">
+                                <!--Header-->
+                                <div class="modal-header d-flex justify-content-center">
+                                    <p class="heading">นำออกไฟล์</p>
+                                </div>
+
+                                <!--Body-->
+                                <div class="modal-body">
+
+                                    <i class="fas fa-bell fa-4x animated rotateIn mb-4"></i>
+
+                                    <p>ต้องการจะนำออกไฟล์ใช่หรือไม่</p>
+
+                                </div>
+
+                                <!--Footer-->
+                                <div class="modal-footer flex-center">
+
+                                    <button class="btn btn-info" id="excelExport">นำออกไฟล์ Excel</button>
+                                    <button class="btn btn-success" id="btn_export_PDF">นำออกไฟล์ PDF</button>
+
+                                    <a type="button" class="btn btn-outline-info waves-effect"
+                                        data-dismiss="modal">ยกเลิก</a>
+                                </div>
+                            </div>
+                            <!--/.Content-->
+                        </div>
+                    </div>
+                    <!--Modal: Export to excel-->
+
+
+                    <!-- ============================================================== -->
+                    <!-- modal  -->
+                    <!-- ============================================================== -->
+
+                    <div class="modal fade bd-example-modal-md" id="upload" tabindex="-1" role="dialog"
+                        aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">นำเข้าไฟล์ Excel ไปยังระบบ</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" enctype="multipart/form-data">
+                                        <input type="file" name="filetoupload" id="fileUpload" accept=".xlsx, .xls"><br>
+                                        <input type="submit" class="btn btn-primary mt-3" value="นำเข้าไฟล์">
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- ============================================================== -->
+                    <!-- เสร็จ modal  -->
                     <!-- ============================================================== -->
-
                     <div class="modal bd-example-modal-sm fade" id="alertmodal" tabindex="-1" role="dialog"
                         aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false"
                         aria-hidden="true">
@@ -1009,7 +1035,6 @@
                     <!-- เสร็จ modal  -->
                     <!-- ============================================================== -->
                 </div>
-                <br><br><br>
 
                 <!-- footer  -->
                 <!-- ============================================================== -->
@@ -1020,7 +1045,7 @@
                             <h3>
                                 <blockquote>
                                     <img src="/img/itlogo.png">
-                                    <h4 style="color:azure;font-size:30px;">สำนักวิชาเทคโนโลยีสารสนเทศ</h4>
+                                    <h4 style="color:azure;font-size:26px;">สำนักวิชาเทคโนโลยีสารสนเทศ</h4>
                                     <div style="border: 0.5px solid red; width: 7cm;"></div>
                                     <code style="color: azure;font-size: 20px;">มหาวิทยาลัยแม่ฟ้าหลวง</code>
                                 </blockquote>
@@ -1130,3 +1155,5 @@
             </div>
         </div>
 </body>
+
+</html>

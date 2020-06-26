@@ -83,7 +83,7 @@
                             if (dataSet[i].Name !== null) {
                                 dataSet[i].Email_user = dataSet[i].Name
                             } else {
-                                dataSet[i].Email_user = "(ยังไม่ยืนยัน) "+ dataSet[i].Email_user 
+                                dataSet[i].Email_user = "(ยังไม่ยืนยัน) " + dataSet[i].Email_user
                             }
                         }
 
@@ -104,11 +104,11 @@
                             dataSet[i].Role = "ผู้ดูแลระบบ"
                         }
                         if (dataSet[i].Name !== null) {
-                                dataSet[i].Email_user = dataSet[i].Name
-                            } else {
-                                dataSet[i].Email_user ="(ยังไม่ยืนยัน) "+ dataSet[i].Email_user 
-                            }
-                        
+                            dataSet[i].Email_user = dataSet[i].Name
+                        } else {
+                            dataSet[i].Email_user = "(ยังไม่ยืนยัน) " + dataSet[i].Email_user
+                        }
+
                     }
                     table.clear();
                     //display modified JSON in DataTable
@@ -407,7 +407,7 @@
                     <ul class="navbar-nav flex-column">
 
                         <li class="nav-item ">
-                            <a class="nav-link " href="/mainpage" aria-expanded="false"><i
+                            <a class="nav-link" href="/mainpage" aria-expanded="false"><i
                                     class="fa fa-home"></i>หน้าหลัก
                             </a>
                             <div id="submenu-1" class="collapse submenu">
@@ -427,7 +427,7 @@
                         </li>
 
                         <li class="nav-item ">
-                            <a class="nav-link " href="/dashboard" aria-expanded="false"><i
+                            <a class="nav-link" href="/dashboard" aria-expanded="false"><i
                                     class="fa fa-dashboard"></i>แดชบอร์ด </a>
                             <div id="submenu-1" class="collapse submenu">
                                 <ul class="nav flex-column">
@@ -437,6 +437,16 @@
                         </li>
 
                         <li class="nav-item ">
+                            <a class="nav-link" href="/asset" aria-expanded="false"><i
+                                    class="fa fa-archive"></i>ครุภัณฑ์ </a>
+                            <div id="submenu-1" class="collapse submenu">
+                                <ul class="nav flex-column">
+
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item " id="manageu">
                             <a class="nav-link active" href="/manageUser" aria-expanded="false"><i
                                     class="fa fa-edit"></i>จัดการผู้ใช้
                             </a>
@@ -454,6 +464,7 @@
                             <div id="submenu-1" class="collapse submenu">
                                 <ul class="nav flex-column">
                                 </ul>
+
                             </div>
                         </li>
                     </ul>
