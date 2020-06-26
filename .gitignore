@@ -5,6 +5,7 @@ node_modules/
 upload/
  _DS_Store
 README.md
+package.json
 package-lock.json
 key.js
 dbConfig.js
