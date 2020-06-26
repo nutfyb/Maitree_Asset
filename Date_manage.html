@@ -66,19 +66,19 @@
 
                             window.location.replace("/checkpage")
                         }
-                        if (dataSet[0].role == 2) {
+                        if (dataSet[0].Role == 2) {
                             $("#manageu").hide();
                             $("#addtime").hide();
                             $("#edittime").hide();
                         }
                         for (let i = 0; i < dataSet.length; i++) {
-                            if (dataSet[i].role == 2) {
-                                dataSet[i].role = "กรรมการ"
-                            } else if (dataSet[i].role == 1) {
-                                dataSet[i].role = "ผู้ดูแลระบบ"
+                            if (dataSet[i].Role == 2) {
+                                dataSet[i].Role = "กรรมการ"
+                            } else if (dataSet[i].Role == 1) {
+                                dataSet[i].Role = "ผู้ดูแลระบบ"
                             }
                         }
-                        $("#rol2").html(dataSet[0].role)
+                        $("#rol2").html(dataSet[0].Role)
 
                     }).fail(function (xhr, state, error) {
                         //get data failed
@@ -514,9 +514,9 @@
     <!-- modal  -->
     <!-- ============================================================== -->
 
-    <div class="modal fade bd-example-modal-sm" id="modaladd" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-sm" id="modaladd" tabindex="-1" Role="dialog"
         aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" Role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">เพิ่มเวลาในการตรวจสอบ</h5>
@@ -550,9 +550,9 @@
     <!-- modal2  -->
     <!-- ============================================================== -->
 
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" Role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" Role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">แก้ไขเวลาในการตรวจสอบ</h5>
@@ -584,8 +584,8 @@
     <!-- เสร็จ modal2  -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
-    <div class="modal bd-example-modal-sm fade" id="alertmodal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal bd-example-modal-sm fade" id="alertmodal" tabindex="-1" Role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog" Role="document">
           <div class="modal-content"  style="background-color : #3f3f3f">
             <div class="modal-body">
                 <h5 style="color: #ffffff; font-weight:bold;">ประกาศ</h5>
