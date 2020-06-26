@@ -70,55 +70,90 @@
                 $('select.year').change(function () {
                     var selected = $(this).children("option:selected").val();
                     $.ajax({
+                    method: "GET",
+                    url: "/manageUser/showAlladminname" 
+                }).done(function (datas, state, xhr) {
+                    $.ajax({
                         method: "GET",
                         url: "/manageUser/showAllUser/" + selected
                     }).done(function (dataSet, state, xhr) {
 
                         for (let i = 0; i < dataSet.length; i++) {
+
                             if (dataSet[i].Role == 2) {
                                 dataSet[i].Role = "กรรมการ"
                             } else if (dataSet[i].Role == 1) {
                                 dataSet[i].Role = "ผู้ดูแลระบบ"
+
                             }
+                            for (let j = 0; j < datas.length; j++) {
+                            if ( dataSet[i].Email_assigner ==datas[j].Email_user ) {
+                                if (datas[j].Name !== null) {
+                                    dataSet[i].Email_assigner = datas[j].Name
+                                }
+                            }
+                        }
+                          
                             if (dataSet[i].Name !== null) {
                                 dataSet[i].Email_user = dataSet[i].Name
+
                             } else {
-                                dataSet[i].Email_user = "(ยังไม่ยืนยัน) "+ dataSet[i].Email_user 
+                                dataSet[i].Email_user = "(ยังไม่ยืนยัน) " + dataSet[i].Email_user
                             }
+
                         }
 
                         table.clear();
                         //display modified JSON in DataTable
                         table.rows.add(dataSet).draw();
+
                     })
                 })
+                })
+                $.ajax({
+                    method: "GET",
+                    url: "/manageUser/showAlladminname" 
+                }).done(function (datas, state, xhr) {
+            
                 $.ajax({
                     method: "GET",
                     url: "/manageUser/showAllUser/" + data[data.length - 1].Year
                 }).done(function (dataSet, state, xhr) {
-
+                    
                     for (let i = 0; i < dataSet.length; i++) {
                         if (dataSet[i].Role == 2) {
                             dataSet[i].Role = "กรรมการ"
                         } else if (dataSet[i].Role == 1) {
                             dataSet[i].Role = "ผู้ดูแลระบบ"
                         }
-                        if (dataSet[i].Name !== null) {
-                                dataSet[i].Email_user = dataSet[i].Name
-                            } else {
-                                dataSet[i].Email_user ="(ยังไม่ยืนยัน) "+ dataSet[i].Email_user 
+                       
+                        for (let j = 0; j < datas.length; j++) {
+                            if ( dataSet[i].Email_assigner ==datas[j].Email_user ) {
+                                if (datas[j].Name !== null) {
+                                    dataSet[i].Email_assigner = datas[j].Name
+                                }
                             }
-                        
+                        }
+                        if (dataSet[i].Name !== null) {
+                            dataSet[i].Email_user = dataSet[i].Name
+
+                        } else {
+                            dataSet[i].Email_user = "(ยังไม่ยืนยัน) " + dataSet[i].Email_user
+                        }
+
+
                     }
+
                     table.clear();
                     //display modified JSON in DataTable
                     table.rows.add(dataSet).draw();
+                
                 }).fail(function (xhr, state, error) {
                     //get data failed
                     $(".alertText").html(xhr.responseText)
                     $("#alertmodal").modal();
                 });
-
+})
             })
 
 

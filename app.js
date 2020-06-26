@@ -825,6 +825,21 @@ app.get("/manageUser/showAllUser/:Year", function (req, res) {
     })
 });
 
+// Load mane
+app.get("/manageUser/showAlladminname", function (req, res) {
+    Email_assigner = req.params.Email_assigner;
+    const sql = "select * from Year_user WHERE Role = 1"
+
+    con.query(sql, function (err, result, fields) {
+        if (err) {
+            res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
+        } else {
+            res.json(result)
+            
+        }
+    })
+});
+
 // Add info of new user in manage user page
 app.post("/manageUser/add/:Email_user/:Email_assigner/:Role", function (req, res) {
     const Year = new Date().getFullYear();
