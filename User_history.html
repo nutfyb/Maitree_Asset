@@ -207,19 +207,20 @@
 
                             window.location.replace("/checkpage")
                         }
-                        if (dataSet[0].role == 2) {
+                        if (dataSet[0].Role == 2) {
+                            $("#DateManage").hide();
                             $("#manageu").hide();
                         }
 
                         for (let i = 0; i < dataSet.length; i++) {
-                            if (dataSet[i].role == 2) {
-                                dataSet[i].role = "กรรมการ"
-                            } else if (dataSet[i].role == 1) {
-                                dataSet[i].role = "ผู้ดูแลระบบ"
+                            if (dataSet[i].Role == 2) {
+                                dataSet[i].Role = "กรรมการ"
+                            } else if (dataSet[i].Role == 1) {
+                                dataSet[i].Role = "ผู้ดูแลระบบ"
                             }
                         }
-                        $("#rol").html(dataSet[0].role)
-                        $("#rol2").html(dataSet[0].role)
+                        $("#rol").html(dataSet[0].Role)
+                        $("#rol2").html(dataSet[0].Role)
 
 
                     }).fail(function (xhr, state, error) {
@@ -334,7 +335,7 @@
                             aria-labelledby="navbarDropdownMenuLink2">
                             <div class="nav-user-info">
                                 <h5 class="mb-0 text-white nav-user-name user" id="user">Ruttathorn </h5>
-                                <span class="status"></span><span class="ml-2" id="rol2">กรรมการ</span>
+                                <span class="status"></span><span class="ml-2" id="rol2"></span>
                             </div>
                             <a class="dropdown-item" href="/auth/logout"><i
                                     class="fas fa-power-off mr-2"></i>ออกจากระบบ</a>
@@ -412,7 +413,7 @@
                                 </div>
                             </li>
 
-                            <li class="nav-item ">
+                            <li class="nav-item" id="DateManage">
                                 <a class="nav-link " href="/Date_manage" aria-expanded="false"><i
                                         class="fa fa-clock"></i>จัดการเวลา
                                 </a>

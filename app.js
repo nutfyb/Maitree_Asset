@@ -104,6 +104,10 @@ app.get("/printqrcode", function (req, res) {
     res.sendFile(path.join(__dirname, "/printqrcode.html"))
 });
 
+app.get("/printbarcode", function (req, res) {
+    res.sendFile(path.join(__dirname, "/printbarcode.html"))
+});
+
 //Return home page
 app.get("/mainpage", function (req, res) {
     res.sendFile(path.join(__dirname, "/mainpage.html"))

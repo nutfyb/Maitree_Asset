@@ -248,7 +248,7 @@
                 $('.btnGroupDrop1').append(
                     $(document.createElement('select')).prop({
                         style: 'border-color: white',
-                        class: 'mt-3 ml-3 location',
+                        class: 'mt-3 location',
                         id: 'Location',
                         name: 'Location'
                     })
@@ -320,7 +320,7 @@
                     .append(
                         $(document.createElement('select')).prop({
                             style: 'border-color: white',
-                            class: 'mt-3 ml-3 status',
+                            class: 'mt-3 ml-2 status',
                             id: 'Status',
                             name: 'Status'
                         })
@@ -396,7 +396,7 @@
                     .append(
                         $(document.createElement('select')).prop({
                             style: 'border-color: white; max-width : 4.6cm',
-                            class: 'mt-3 ml-3 commitee',
+                            class: 'mt-3 ml-2 commitee',
                             id: 'Email_Committee',
                             name: 'Email_Committee'
                         })
@@ -543,6 +543,24 @@
 
             });
 
+            $("#barcode").click(function () {
+
+                var selectedItem = [];
+                $.each($("input[name='singleCheckbox']:checked"), function () {
+                    selectedItem.push($(this).val());
+                });
+                if (selectedItem[0] === undefined) {
+                    $(".alertText").html("กรุณาเลือกครุภัณฑ์อย่างน้อย 1 ชิ้น")
+                    $("#alertmodal").modal();
+                } else {
+                    window.sessionStorage.setItem("items", JSON.stringify(selectedItem));
+                    var storedArray = JSON.parse(sessionStorage.getItem("items"));
+                    window.location.href = "/printbarcode";
+                }
+
+
+            });
+
 
             $.ajax({
                 method: "GET",
@@ -561,19 +579,20 @@
                         if (dataSet[0] === undefined) {
                             window.location.replace("/checkpage")
                         }
-                        if (dataSet[0].role == 2) {
+                        if (dataSet[0].Role == 2) {
+                            $("#DateManage").hide();
                             $("#manageu").hide();
                             $("#take").hide();
                             $("#import").hide();
                         }
                         for (let i = 0; i < dataSet.length; i++) {
-                            if (dataSet[i].role == 2) {
-                                dataSet[i].role = "กรรมการ"
-                            } else if (dataSet[i].role == 1) {
-                                dataSet[i].role = "ผู้ดูแลระบบ"
+                            if (dataSet[i].Role == 2) {
+                                dataSet[i].Role = "กรรมการ"
+                            } else if (dataSet[i].Role == 1) {
+                                dataSet[i].Role = "ผู้ดูแลระบบ"
                             }
                         }
-                        $("#rol2").html(dataSet[0].role)
+                        $("#rol2").html(dataSet[0].Role)
 
 
                     }).fail(function (xhr, state, error) {
@@ -766,7 +785,7 @@
                             aria-labelledby="navbarDropdownMenuLink2">
                             <div class="nav-user-info">
                                 <h5 class="mb-0 text-white nav-user-name user" id="user">Ruttathorn </h5>
-                                <span class="status"></span><span class="ml-2" id="rol2">กรรมการ</span>
+                                <span class="status"></span><span class="ml-2" id="rol2"></span>
                             </div>
                             <a class="dropdown-item" href="/auth/logout"><i
                                     class="fas fa-power-off mr-2"></i>ออกจากระบบ</a>
@@ -844,7 +863,7 @@
                                 </div>
                             </li>
 
-                            <li class="nav-item ">
+                            <li class="nav-item" id="DateManage">
                                 <a class="nav-link " href="/Date_manage" aria-expanded="false"><i
                                         class="fa fa-clock"></i>จัดการเวลา
                                 </a>
@@ -894,7 +913,7 @@
                     </div>
 
                 </div>
-               
+
                 <!-- ============================================================== -->
                 <!-- เสร็จหัวกระดาษ  -->
                 <!-- ============================================================== -->
@@ -939,9 +958,10 @@
                         </div>
                         <button class="btn mt-2" class="btn btn-primary" data-toggle="modal" data-target="#upload"
                             id="import">นำเข้าไฟล์</button>
-                        <button class="btn mt-2" class="btn btn-primary" data-toggle="modal" data-target="#modalPushExcel"
-                            id="#">นำออกไฟล์</button>
-                        <button class="btn mt-2" id="qrcode">สร้างรหัส QR</button>
+                        <button class="btn mt-2" class="btn btn-primary" data-toggle="modal"
+                            data-target="#modalPushExcel" id="#">นำออกไฟล์</button>
+                        <button class="btn mt-2" id="qrcode">สร้าง QRcode</button>
+                        <button class="btn mt-2" id="barcode">สร้าง Barcode</button>
                         <button class="btn mt-2" id="take">ตั้งค่าการถ่ายรูป</button>
 
                         <br><br><br>
