@@ -36,6 +36,14 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
+    <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css"
+        rel="stylesheet" />
+    <script type="text/javascript"
+        src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+
     <title>ครุภัณฑ์</title>
 
     <script>
@@ -49,8 +57,16 @@
                 if (document.getElementById("fileUpload").files.length == 0) {
                     //or use jQuery
 
-                    $(".alertText").html("กรุณาเลือกไฟล์")
-                    $("#alertmodal").modal();
+                    swal({
+                        title: "กรุณาเลือกไฟล์",
+                        type: "info",
+                        confirmButtonClass: "btn-primary",
+                        confirmButtonText: "ตกลง",
+                        closeOnConfirm: true,
+                    })
+
+                    // $(".alertText").html("กรุณาเลือกไฟล์")
+                    // $("#alertmodal").modal();
                     return;
                 }
                 const formData = new FormData(this);
@@ -174,32 +190,6 @@
 
                 $('select.year').change(function () {
                     var selected = $(this).children("option:selected").val();
-
-                    $.ajax({
-                        method: "GET",
-                        url: "/item/dashboard/number1/" + selected
-                    }).done(function (dataSet, state, xhr) {
-                        $("#all").html(dataSet[0].Numbers_of_item);
-                    })
-                    $.ajax({
-                        method: "GET",
-                        url: "/item/dashboard/number2/0/" + selected
-                    }).done(function (dataSet, state, xhr) {
-                        $("#dis").html(dataSet[0].Numbers_of_item);
-                    })
-
-                    $.ajax({
-                        method: "GET",
-                        url: "/item/dashboard/number2/1/" + selected
-                    }).done(function (dataSet, state, xhr) {
-                        $("#normal").html(dataSet[0].Numbers_of_item);
-                    })
-                    $.ajax({
-                        method: "GET",
-                        url: "/item/dashboard/number2/2/" + selected
-                    }).done(function (dataSet, state, xhr) {
-                        $("#fix").html(dataSet[0].Numbers_of_item);
-                    })
 
                     $.ajax({
                         method: "GET",
@@ -454,15 +444,22 @@
             });
 
             table = $('#myTable').DataTable({
-
-
-                columns: [
+                'columnDefs': [
                     {
-                        "mData": "Asset_Number", title: "<input type='checkbox' id='select-all' name='select-all'>",
-                        "render": function (data) {
-                            return '<input type="checkbox" name="singleCheckbox" value=' + data + '>';
+                        'targets': 0,
+                        'checkboxes': {
+                            'selectRow': true
                         }
-                    },
+                    }
+                ],
+                'select': {
+                    'style': 'multi',
+                    // 'selector': 'td:first-child'
+                },
+                'order': [[1, 'asc']],
+                deferRender: true,
+                columns: [
+                    { data: "Asset_Number" },
                     {
                         "mData": "Image", title: "รูปภาพ",
                         "render": function (data) {
@@ -482,82 +479,59 @@
             });
 
 
-            $('#select-all').click(function (event) {
-                if (this.checked) {
-                    // Iterate each checkbox
-                    $(':checkbox').each(function () {
-                        this.checked = true;
-                    });
-                } else {
-                    $(':checkbox').each(function () {
-                        this.checked = false;
-                    });
-                }
-            });
+            // $('#select-all').click(function (event) {
+            //     if (this.checked) {
+            //         // Iterate each checkbox
+            //         $(':checkbox').each(function () {
+            //             this.checked = true;
+            //         });
+            //     } else {
+            //         $(':checkbox').each(function () {
+            //             this.checked = false;
+            //         });
+            //     }
+            // });
 
+
+            // $('#myTable tbody').on('click', '.select-checkbox', function () {
+            //     $(this).toggleClass('selected');
+            // });
             $("#take").click(function () {
-                var selectedItem = [];
-                $.each($("input[name='singleCheckbox']:checked"), function () {
-                    selectedItem.push($(this).val());
-                });
-                $.ajax({
-                    method: "PUT",
-                    url: "/item/take",
-                    data: { take: selectedItem },
 
-                }).done(function (dataSet, state, xhr) {
-                    if (selectedItem[0] === undefined) {
-                        $(".alertText").html("กรุณาเลือกครุภัณฑ์อย่างน้อย 1 ชิ้น")
-                        $("#alertmodal").modal();
-                    } else {
-                        $(".btn-sm").hide();
-                        $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
-                        $(".alertText").html("บันทึกสำเร็จ")
-                        $("#alertmodal").modal();
-
-                    }
+                var rows_selected = table.column(0).checkboxes.selected();
+                let rowdata = rows_selected.join(",")
+                const arr = rowdata.split(",");
+                console.log(arr)
 
 
-                }).fail(function (xhr, state, error) {
-                    $(".alertText").html(xhr.responseText)
-                    $("#alertmodal").modal();
-                });
-
-            });
-
-            $("#qrcode").click(function () {
-
-                var selectedItem = [];
-                $.each($("input[name='singleCheckbox']:checked"), function () {
-                    selectedItem.push($(this).val());
-                });
-                if (selectedItem[0] === undefined) {
-                    $(".alertText").html("กรุณาเลือกครุภัณฑ์อย่างน้อย 1 ชิ้น")
-                    $("#alertmodal").modal();
-                } else {
-                    window.sessionStorage.setItem("items", JSON.stringify(selectedItem));
-                    var storedArray = JSON.parse(sessionStorage.getItem("items"));
-                    window.location.href = "/printqrcode";
-                }
 
 
-            });
+                // var selectedItem = [];
+                // $.each($("input[name='singleCheckbox']:checked"), function () {
+                //     selectedItem.push($(this).val());
+                // });
+                // $.ajax({
+                //     method: "PUT",
+                //     url: "/item/take",
+                //     data: { take: selectedItem },
 
-            $("#barcode").click(function () {
+                // }).done(function (dataSet, state, xhr) {
+                //     if (selectedItem[0] === undefined) {
+                //         $(".alertText").html("กรุณาเลือกครุภัณฑ์อย่างน้อย 1 ชิ้น")
+                //         $("#alertmodal").modal();
+                //     } else {
+                //         $(".btn-sm").hide();
+                //         $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
+                //         $(".alertText").html("บันทึกสำเร็จ")
+                //         $("#alertmodal").modal();
 
-                var selectedItem = [];
-                $.each($("input[name='singleCheckbox']:checked"), function () {
-                    selectedItem.push($(this).val());
-                });
-                if (selectedItem[0] === undefined) {
-                    $(".alertText").html("กรุณาเลือกครุภัณฑ์อย่างน้อย 1 ชิ้น")
-                    $("#alertmodal").modal();
-                } else {
-                    window.sessionStorage.setItem("items", JSON.stringify(selectedItem));
-                    var storedArray = JSON.parse(sessionStorage.getItem("items"));
-                    window.location.href = "/printbarcode";
-                }
+                //     }
 
+
+                // }).fail(function (xhr, state, error) {
+                //     $(".alertText").html(xhr.responseText)
+                //     $("#alertmodal").modal();
+                // });
 
             });
 
@@ -606,32 +580,6 @@
                 $(".alertText").html(xhr.responseText)
                 $("#alertmodal").modal();
             });
-            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  number  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            $.ajax({
-                method: "GET",
-                url: "/item/dashboard/number"
-            }).done(function (dataSet, state, xhr) {
-                $("#all").html(dataSet[0].Numbers_of_item);
-            })
-            $.ajax({
-                method: "GET",
-                url: "/item/dashboard/number/0"
-            }).done(function (dataSet, state, xhr) {
-                $("#dis").html(dataSet[0].Numbers_of_item);
-            })
-
-            $.ajax({
-                method: "GET",
-                url: "/item/dashboard/number/1"
-            }).done(function (dataSet, state, xhr) {
-                $("#normal").html(dataSet[0].Numbers_of_item);
-            })
-            $.ajax({
-                method: "GET",
-                url: "/item/dashboard/number/2"
-            }).done(function (dataSet, state, xhr) {
-                $("#fix").html(dataSet[0].Numbers_of_item);
-            })
 
             getItem();
 
@@ -669,6 +617,82 @@
                 table.clear();
                 //display modified JSON in DataTable
                 table.rows.add(dataSet).draw();
+
+
+                // ========== Print Qrcode ================
+                $("#qrcode").click(function () {
+
+                    var rows_selected1 = table.column(0).checkboxes.selected();
+                    var selectedItem = [];
+
+                    if (rows_selected1.length != 0) {
+
+                        $.each(rows_selected1, function (index, value) {
+                            selectedItem.push(value);
+                            // console.log(`${index}: ${value}`);
+                        });
+                        console.log(selectedItem);
+                        let jsobject = JSON.stringify(selectedItem)
+                        sessionStorage.selectedItem = jsobject
+
+                        window.open('/printqrcode', '_blank');
+                    } else {
+                        // alert("Please select item")
+                        swal({
+                            title: "กรุณาเลือกข้อมูล",
+                            // text: "You will not be able to recover this imaginary file!",
+                            type: "info",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-primary",
+                            // cancelButtonClass: "btn-primary",
+                            confirmButtonText: "ตกลง",
+                            // cancelButtonText: "ยกเลิก",
+                            closeOnConfirm: true,
+                            // closeOnCancel: true
+                        })
+                    }
+                });
+
+                // ========== Print Qrcode End ================
+
+                // ========== Print Barcode ================
+
+                $("#barcode").click(function () {
+
+                    var rows_selected1 = table.column(0).checkboxes.selected();
+                    var selectedItem1 = [];
+
+                    if (rows_selected1.length != 0) {
+
+                        $.each(rows_selected1, function (index, value) {
+                            selectedItem1.push(value);
+                            // console.log(`${index}: ${value}`);
+                        });
+                        console.log(selectedItem1);
+                        let jsobject = JSON.stringify(selectedItem1)
+                        sessionStorage.selectedItem1 = jsobject
+
+                        window.open('/printbarcode', '_blank');
+                    } else {
+                        // alert("Please select item")
+                        swal({
+                            title: "กรุณาเลือกข้อมูล",
+                            // text: "You will not be able to recover this imaginary file!",
+                            type: "info",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-primary",
+                            // cancelButtonClass: "btn-primary",
+                            confirmButtonText: "ตกลง",
+                            // cancelButtonText: "ยกเลิก",
+                            closeOnConfirm: true,
+                            // closeOnCancel: true
+                        })
+                    }
+
+                });
+
+                // ========== Print Barcode End ================
+
 
 
                 $.ajax({
@@ -853,11 +877,11 @@
                             </li>
 
                             <li class="nav-item ">
-                                <a class="nav-link" href="/asset" aria-expanded="false"><i
+                                <a class="nav-link" href="/announce" aria-expanded="false"><i
                                         class="fa fa-bullhorn"></i>ข่าวประชาสัมพันธ์ </a>
                                 <div id="submenu-1" class="collapse submenu">
                                     <ul class="nav flex-column">
-    
+
                                     </ul>
                                 </div>
                             </li>
@@ -902,7 +926,7 @@
                     <div class="row">
                         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
                             <div class="page-header ml-5">
-                                <h3 class="mb-2 ">ครุภัณฑ์ </h3>
+                                <h2 class="mb-2 ">ครุภัณฑ์ </h2>
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
