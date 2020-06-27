@@ -123,6 +123,11 @@ app.get("/asset", function (req, res) {
     res.sendFile(path.join(__dirname, "/asset.html"))
 });
 
+//Return Aseet page
+app.get("/announce", function (req, res) {
+    res.sendFile(path.join(__dirname, "/newspage.html"))
+});
+
 //Return dashboard page
 app.get("/dashboard", function (req, res) {
     res.sendFile(path.join(__dirname, "/dashboard.html"))
@@ -197,10 +202,10 @@ function importExelData2MySQL(res, filePath, email) {
         rows.shift();
 
         let sql = "INSERT INTO item (`Asset_Number`,Inventory_Number,`Asset_Description`,`Model`,`Serial`,`Location`,`Room`,`Received_date`,`Original_value`,`Cost_center`,`Department`,`Vendor_name`,Year,Status, Email_Importer,Date_Upload) VALUES ?";
-        var count = [1,3,4,5,6,7,8,9,10,11,12,13];
+        var count = [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
         for (var i = 0; i < rows.length; i++) {
             var temp = rows[i];
-           
+
             rows[i] = [];
 
             for (var j = 0; j < 12; j++) {
@@ -256,7 +261,7 @@ function importfromexel(res, filePath, email) {
             }
             else {
                 let sql = "INSERT INTO item (`Asset_Number`,`Asset_Description`,`Model`,`Serial`,`Location`,`Room`,`Received_date`,`Original_value`,`Cost_center`,`Department`,`Vendor_name`,Year,Status, Email_Importer,Date_Upload) VALUES ?";
-                var count = [1,4,5,6,7,8,9,10,11,12,13];
+                var count = [1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
                 for (var i = 0; i < rows.length; i++) {
                     var temp = rows[i];
                     rows[i] = [];
@@ -277,7 +282,7 @@ function importfromexel(res, filePath, email) {
                         console.log(err);
                         res.send("มีข้อมูลนี้แล้วในระบบ")
                     } else {
-res.send("บันทึกสำเร็จ")
+                        res.send("บันทึกสำเร็จ")
 
                     }
                 })
@@ -354,10 +359,10 @@ app.get("/user/profile/inspectedItem/Total/Number1/:Email_Committee", function (
 
 // Loadnumber people scan in that day
 app.get("/user/datescan", function (req, res) {
-    const Year =  new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const sql = "SELECT Date_Scan FROM item WHERE Year = ? ;"
 
-    con.query(sql,[Year], function (err, result, fields) {
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -410,11 +415,11 @@ app.get("/Year/user", function (req, res) {
 
 // Load date scan
 app.get("/datescan/user", function (req, res) {
-    const Year =  new Date().getFullYear();
+    const Year = new Date().getFullYear();
     const sql = "SELECT DISTINCT Date_Scan FROM item where Year = ? ORDER BY Date_scan"
 
 
-    con.query(sql,[Year], function (err, result, fields) {
+    con.query(sql, [Year], function (err, result, fields) {
         if (err) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
@@ -844,7 +849,7 @@ app.get("/manageUser/showAlladminname", function (req, res) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
             res.json(result)
-            
+
         }
     })
 });
@@ -898,7 +903,7 @@ app.get("/numberitem", function (req, res) {
             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
         } else {
             res.send(result)
-            
+
         }
     })
 });
