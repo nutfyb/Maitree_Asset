@@ -174,7 +174,9 @@ app.get("/takepicture", function (req, res) {
     res.sendFile(path.join(__dirname, "/takepicture.html"))
 });
 
-
+app.get("/proflieadmin", function (req, res) {
+    res.sendFile(path.join(__dirname, "/proflieadmin.html"))
+});
 
 //================== Services (functions) ===================
 
@@ -824,6 +826,19 @@ app.put("/item/edit", function (req, res) {
         }
     })
 });
+
+// Load info of admin datatable page
+app.get("/admindataTable2/info/", function (req, res) {
+    const sql = "SELECT DISTINCT Email_Committee FROM item WHERE Year = ?"
+    con.query(sql, [d], function (err, result, fields) {
+        if (err) {
+            res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
+        } else {
+            res.json(result)
+        }
+    })
+});
+
 
 // Load info of all user of manage user page
 app.get("/manageUser/showAllUser/:Year", function (req, res) {
