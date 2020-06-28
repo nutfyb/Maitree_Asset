@@ -33,6 +33,7 @@ app.set("view engine", "ejs");
 const con = mysql.createConnection(config);
 app.use("/img", express.static(path.join(__dirname, 'img')));
 app.use("/style.css", express.static(path.join(__dirname, 'style.css')));
+app.use("/upload", express.static(path.join(__dirname, 'upload')));
 
 // read excel file (import), put excel file into work folder
 var wb = xlsx.readFile("sampleData.xlsx", { cellDates: true });
@@ -172,6 +173,11 @@ app.get("/information", function (req, res) {
 //Return landing1 page
 app.get("/takepicture", function (req, res) {
     res.sendFile(path.join(__dirname, "/takepicture.html"))
+});
+
+//Return landing1 page
+app.get("/test", function (req, res) {
+    res.sendFile(path.join(__dirname, "/test.html"))
 });
 
 
@@ -951,6 +957,114 @@ app.put("/dateTime/updateTime/:Date_start/:Date_end", function (req, res) {
         }
     })
 });
+
+// Load announement
+app.get("/Loadannounce", function (req, res) {
+    // const Year = new Date().getFullYear();
+    const sql = "SELECT * FROM `announcement` ORDER BY `Number`  DESC"
+    con.query(sql, function (err, result, fields) {
+        if (err) {
+            res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
+        } else {
+            res.send(result)
+
+        }
+    })
+});
+
+// upload photo announce
+app.post("/UploadingPhoto", function (req, res) {
+    // const EmailOwner = req.params.EmailOwner
+    // const Head = req.body.Head
+    // const Detail = req.body.Detail
+    upload(req, res, function (err) {
+        if (err) {
+            // An unknown error occurred when uploading.
+            res.status(500).send("ไม่สามารถอัพโหลดไฟล์นี้ได้");
+            return;
+        }
+        else {
+            file_name = req.file.filename
+            console.log(file_name)
+            res.json(file_name)
+        }
+
+    })
+});
+
+//upload annonce
+app.post("/AddAnnounce/:EmailOwner", function (req, res) {
+    const EmailOwner = req.params.EmailOwner
+    const { Head, Detail, DateEndCreate, Image } = req.body
+    // const Head = req.body.Head
+    // const Detail = req.body.Detail
+    // const DateAdd = req.body.DateAdd
+    // const Image = req.body.Image;
+    const sql = "INSERT INTO `announcement` ( `Head`, `Detail`,`DateEndCreate` ,`Image`, `Email_announcer`) VALUES (?, ?, ?, ?,?);"
+    con.query(sql, [Head, Detail, DateEndCreate, Image, EmailOwner], function (err, result, fields) {
+        if (err) {
+            res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง")
+            console.log(err)
+        }
+        else {
+            res.send("/announce");
+        }
+    })
+});
+
+//update announce
+app.put("/EditAnnounce/:EmailOwner/:Number1", function (req, res) {
+    const EmailOwner = req.params.EmailOwner
+    const Number1 = req.params.Number1
+    const { Head, Detail, DateEndCreate, Image } = req.body
+    // const Head = req.body.Head
+    // const Detail = req.body.Detail
+    // const DateAdd = req.body.DateAdd
+    // const Image = req.body.Image;
+    console.log(EmailOwner+"  "+Number1)
+    const sql = "UPDATE `announcement` SET `Head` = ?, `Detail` = ?, `DateEndCreate` = ?,`Image` = ?, `Email_announcer` = ? WHERE `announcement`.`Number` = ?;"
+    con.query(sql, [Head, Detail, DateEndCreate, Image, EmailOwner, Number1], function (err, result, fields) {
+        if (err) {
+            res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง")
+            console.log(err)
+        }
+        else {
+            res.send("/announce");
+            console.log(result)
+        }
+    })
+});
+
+//delete announce
+app.delete("/DeleteAnnounce/:Number1", function (req, res) {
+    // const EmailOwner = req.params.EmailOwner
+    const Number1 = req.params.Number1
+    // const { Head, Detail, DateEndCreate, Image } = req.body
+    // const Head = req.body.Head
+    // const Detail = req.body.Detail
+    // const DateAdd = req.body.DateAdd
+    // const Image = req.body.Image;
+    // console.log(EmailOwner+"  "+Number1)
+    const sql = "DELETE FROM `announcement` WHERE `announcement`.`Number` = ?"
+    con.query(sql, [Number1], function (err, result, fields) {
+        if (err) {
+            res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง")
+            console.log(err)
+        }
+        else {
+            if(result.affectedRows !=1){
+                res.status(503).send("Delete Failed")
+            }
+            else{
+                res.send("/announce");
+                console.log("Delete Successed")
+            }
+            
+        }
+    })
+});
+
+
 
 
 app.use("/img", express.static(path.join(__dirname, 'img')));

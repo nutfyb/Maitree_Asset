@@ -25,6 +25,18 @@ content-type: application/json
     "Email_user": "tanapun@gmail.com"
 }
 
+### Edit status of item
+PUT  http://localhost:35000/EditAnnounce/6131302001@lamduan.mfu.ac.th/29
+content-type: application/json
+
+{
+    "Head": "7",
+    "Detail": "55559",
+    "DateEndCreate": "2020-05-30",
+    "Image":"aa.jpg"
+}
+
+
 ### Load some info of item of landing1
 GET  http://localhost:35000/landing1/showSomeInfo
 content-type: application/json
