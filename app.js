@@ -180,6 +180,11 @@ app.get("/test", function (req, res) {
     res.sendFile(path.join(__dirname, "/test.html"))
 });
 
+//Return adminhistory page
+app.get("/adminhistory", function (req, res) {
+    res.sendFile(path.join(__dirname, "/Admin_history.html"))
+});
+
 
 
 //================== Services (functions) ===================
@@ -348,6 +353,8 @@ app.get("/manageUser/showAllUsers/:Email_user", function (req, res) {
         }
     })
 });
+
+
 
 // Load inspected total item numbers by a user
 app.get("/user/profile/inspectedItem/Total/Number1/:Email_Committee", function (req, res) {
