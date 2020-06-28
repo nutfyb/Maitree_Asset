@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2020 at 11:59 AM
+-- Generation Time: Jun 25, 2020 at 05:55 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -81,7 +81,7 @@ CREATE TABLE `item` (
   `Vendor_name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Status` int(1) NOT NULL,
   `Date_scan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `takepicture` int(11) NOT NULL,
+  `Takepicture` int(11) NOT NULL,
   `Image` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -94,6 +94,7 @@ CREATE TABLE `item` (
 CREATE TABLE `year_user` (
   `Year` int(4) NOT NULL,
   `Email_user` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Name` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Email_assigner` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Role` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -102,25 +103,26 @@ CREATE TABLE `year_user` (
 -- Dumping data for table `year_user`
 --
 
-INSERT INTO `year_user` (`Year`, `Email_user`, `Email_assigner`, `Role`) VALUES
-(2019, 'pipat@gmail.com', 'tanapun@gmail.com', '2'),
-(2019, 'tanapun2@gmail.com', 'tanapun2@gmail.com', '1'),
-(2020, '6131302005@lamduan.mfu.ac.th', '6131302005@lamduan.mfu.ac.th', '1'),
-(2020, 'boahancock557@gmail.com', '6131302005@lamduan.mfu.ac.th', 'กรรมการ'),
-(2020, 'boahancock788@gmail.com', '6131302005@lamduan.mfu.ac.th', 'กรรมการ'),
-(2020, 'dsaadas@gmail.com', '6131302005@lamduan.mfu.ac.th', 'admin'),
-(2020, 'gjdkjfkjhf@gmail.com', '6131302005@lamduan.mfu.ac.th', 'กรรมการ'),
-(2020, 'hjfjhvjhvj', '6131302005@lamduan.mfu.ac.th', '2'),
-(2020, 'mnyspx@gmail.com', 'tanapun@gmail.com', '2'),
-(2020, 'pokemon@gmail.com', 'boahancock557@gmail.com', '2'),
-(2020, 'pokemon@gmial.com', '6131302005@lamduan.mfu.ac.th', '2'),
-(2020, 'pokemon63@gmial.com', '6131302005@lamduan.mfu.ac.th', '2'),
-(2020, 'pokemon674@gmial.com', '6131302005@lamduan.mfu.ac.th', 'กรรมการ'),
-(2020, 'pokemon700@gmail.com', '6131302005@lamduan.mfu.ac.th', '2'),
-(2020, 'pokemon78@gmail.com', '6131302005@lamduan.mfu.ac.th', '2'),
-(2020, 'pokemon789@gmail.com', '6131302005@lamduan.mfu.ac.th', '2'),
-(2020, 'tanapun@gmail.com', '6131302005@lamduan.mfu.ac.th', '1'),
-(2020, 'tanapun558@gmail.com', '6131302005@lamduan.mfu.ac.th', '2');
+INSERT INTO `year_user` (`Year`, `Email_user`, `Name`, `Email_assigner`, `Role`) VALUES
+(2019, 'pipat@gmail.com', NULL, 'tanapun@gmail.com', '2'),
+(2019, 'tanapun2@gmail.com', NULL, 'tanapun2@gmail.com', '1'),
+(2020, '612321@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', '2'),
+(2020, '6131302005@lamduan.mfu.ac.th', 'PIPAT MASSRI', '6131302005@lamduan.mfu.ac.th', '1'),
+(2020, 'boahancock557@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', 'กรรมการ'),
+(2020, 'boahancock788@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', 'กรรมการ'),
+(2020, 'dsaadas@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', 'admin'),
+(2020, 'gjdkjfkjhf@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', 'กรรมการ'),
+(2020, 'hjfjhvjhvj', NULL, '6131302005@lamduan.mfu.ac.th', '2'),
+(2020, 'mnyspx@gmail.com', NULL, 'tanapun@gmail.com', '2'),
+(2020, 'pokemon@gmail.com', NULL, 'boahancock557@gmail.com', '2'),
+(2020, 'pokemon@gmial.com', NULL, '6131302005@lamduan.mfu.ac.th', '2'),
+(2020, 'pokemon63@gmial.com', NULL, '6131302005@lamduan.mfu.ac.th', '2'),
+(2020, 'pokemon674@gmial.com', NULL, '6131302005@lamduan.mfu.ac.th', 'กรรมการ'),
+(2020, 'pokemon700@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', '2'),
+(2020, 'pokemon78@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', '2'),
+(2020, 'pokemon789@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', '2'),
+(2020, 'tanapun@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', '1'),
+(2020, 'tanapun558@gmail.com', NULL, '6131302005@lamduan.mfu.ac.th', '2');
 
 --
 -- Indexes for dumped tables
