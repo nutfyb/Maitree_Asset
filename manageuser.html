@@ -70,35 +70,74 @@
                 $('select.year').change(function () {
                     var selected = $(this).children("option:selected").val();
                     $.ajax({
+                        method: "GET",
+                        url: "/manageUser/showAlladminname"
+                    }).done(function (datas, state, xhr) {
+                        $.ajax({
+                            method: "GET",
+                            url: "/manageUser/showAllUser/" + selected
+                        }).done(function (dataSet, state, xhr) {
+
+                            for (let i = 0; i < dataSet.length; i++) {
+
+                                if (dataSet[i].Role == 2) {
+                                    dataSet[i].Role = "กรรมการ"
+                                } else if (dataSet[i].Role == 1) {
+                                    dataSet[i].Role = "ผู้ดูแลระบบ"
+
+                                }
+                                for (let j = 0; j < datas.length; j++) {
+                                    if (dataSet[i].Email_assigner == datas[j].Email_user) {
+                                        if (datas[j].Name !== null) {
+                                            dataSet[i].Email_assigner = datas[j].Name
+                                        }
+                                    }
+                                }
+
+                                if (dataSet[i].Name !== null) {
+
+                                } else {
+                                    dataSet[i].Name = dataSet[i].Email_user + "(ยังไม่ยืนยัน) "
+                                }
+
+                            }
+
+                            table.clear();
+                            //display modified JSON in DataTable
+                            table.rows.add(dataSet).draw();
+
+                        })
+                    })
+                })
+                $.ajax({
                     method: "GET",
-                    url: "/manageUser/showAlladminname" 
+                    url: "/manageUser/showAlladminname"
                 }).done(function (datas, state, xhr) {
+
                     $.ajax({
                         method: "GET",
-                        url: "/manageUser/showAllUser/" + selected
+                        url: "/manageUser/showAllUser/" + data[data.length - 1].Year
                     }).done(function (dataSet, state, xhr) {
 
                         for (let i = 0; i < dataSet.length; i++) {
-
                             if (dataSet[i].Role == 2) {
                                 dataSet[i].Role = "กรรมการ"
                             } else if (dataSet[i].Role == 1) {
                                 dataSet[i].Role = "ผู้ดูแลระบบ"
-
                             }
+
                             for (let j = 0; j < datas.length; j++) {
-                            if ( dataSet[i].Email_assigner ==datas[j].Email_user ) {
-                                if (datas[j].Name !== null) {
-                                    dataSet[i].Email_assigner = datas[j].Name
+                                if (dataSet[i].Email_assigner == datas[j].Email_user) {
+                                    if (datas[j].Name !== null) {
+                                        dataSet[i].Email_assigner = datas[j].Name
+                                    }
                                 }
                             }
-                        }
-                          
                             if (dataSet[i].Name !== null) {
-                                dataSet[i].Email_user = dataSet[i].Name
+
 
                             } else {
-                                dataSet[i].Email_user = "(ยังไม่ยืนยัน) " + dataSet[i].Email_user
+                                dataSet[i].Name = dataSet[i].Email_user + "(ยังไม่ยืนยัน) "
                             }
 
                         }
@@ -107,52 +146,12 @@
                         //display modified JSON in DataTable
                         table.rows.add(dataSet).draw();
 
-                    })
+                    }).fail(function (xhr, state, error) {
+                        //get data failed
+                        $(".alertText").html(xhr.responseText)
+                        $("#alertmodal").modal();
+                    });
                 })
-                })
-                $.ajax({
-                    method: "GET",
-                    url: "/manageUser/showAlladminname" 
-                }).done(function (datas, state, xhr) {
-            
-                $.ajax({
-                    method: "GET",
-                    url: "/manageUser/showAllUser/" + data[data.length - 1].Year
-                }).done(function (dataSet, state, xhr) {
-                    
-                    for (let i = 0; i < dataSet.length; i++) {
-                        if (dataSet[i].Role == 2) {
-                            dataSet[i].Role = "กรรมการ"
-                        } else if (dataSet[i].Role == 1) {
-                            dataSet[i].Role = "ผู้ดูแลระบบ"
-                        }
-                       
-                        for (let j = 0; j < datas.length; j++) {
-                            if ( dataSet[i].Email_assigner ==datas[j].Email_user ) {
-                                if (datas[j].Name !== null) {
-                                    dataSet[i].Email_assigner = datas[j].Name
-                                }
-                            }
-                        }
-                        if (dataSet[i].Name !== null) {
-                            dataSet[i].Email_user = dataSet[i].Name
-
-                        } else {
-                            dataSet[i].Email_user = "(ยังไม่ยืนยัน) " + dataSet[i].Email_user
-                        }
-
-                    }
-
-                    table.clear();
-                    //display modified JSON in DataTable
-                    table.rows.add(dataSet).draw();
-                
-                }).fail(function (xhr, state, error) {
-                    //get data failed
-                    $(".alertText").html(xhr.responseText)
-                    $("#alertmodal").modal();
-                });
-})
             })
 
 
@@ -261,9 +260,6 @@
                         $(".alertText").html("รูปแบบอีเมลไม่ถูกต้อง")
                         $("#alertmodal").modal();
                     }
-
-
-
                 }
 
                 $(".modal").modal("hide");
@@ -311,13 +307,15 @@
             });
             table = $('#myTable').DataTable({
                 columns: [
-                    { data: "Email_user", title: "ผู้ใช้" },
+                    { data: "Name", title: "ชื่อผู้ใช้" },
+                    { data: "Email_user", title: "อีเมลผู้ใช้" },
                     { data: "Email_assigner", title: "ผู้แต่งตั้ง" },
                     { data: "Role", title: "หน้าที่" },
                     {
-                        "targets": -1,
+                        // "targets": -1,
                         "data": null,
-                        "defaultContent": "<button class='btn btn-warning'>แก้ไข</button>"
+                        title: "ลบหรือแก้ไขผู้ใช้",
+                        "defaultContent": "<button class=\'btn btn-warning editemail\'>แก้ไข</button><button class=\'btn btn-danger deleteemail ml-3\'>ลบ</button>"
                     }
                 ],
             });
@@ -325,7 +323,40 @@
                 $(".bd-example-modal-lg").modal();
 
             });
-            $('#myTable tbody').on('click', 'button', function () {
+
+            $('#myTable tbody ').on('click', '.deleteemail', function () {
+                var data = table.row($(this).parents('tr')).data();
+                Email_user = data.Email_user;
+                $.ajax({
+                    method: "GET",
+                    url: "/user/profile/inspectedItem/Total/Number1/" + Email_user
+                }).done(function (dataSet, state, xhr) {
+                    if (dataSet[0].Numbers_of_Inspected_Item == 0) {
+                        if (confirm("ยืนยันการลบ " + Email_user)) {
+                            $.ajax({
+                                method: "DELETE",
+                                url: "/manageUser/deleteAllUser/" + Email_user
+                            }).done(function (dataSet, state, xhr) {
+                                window.location.reload();
+                            })
+                        } else {
+
+                        }
+                    } else {
+                        $(".btn-sm").hide();
+                        $(".but").append('<input class="btn btn-sm" type="button" value = "ตกลง" onclick = "location.reload()" style="float: right; background-color: #0a72c1; color:white">')
+                        $(".alertText").html("ผู้ใช้นี้ได้เริ่มตรวจนับแล้ว")
+                        $("#alertmodal").modal();
+
+                    }
+                }).fail(function (xhr, state, error) {
+                    //get data failed
+                    $(".alertText").html(xhr.responseText)
+                    $("#alertmodal").modal();
+                });
+            })
+
+            $('#myTable tbody ').on('click', '.editemail', function () {
                 var data = table.row($(this).parents('tr')).data();
                 Email_user = data.Email_user;
                 rol = data.Role;
