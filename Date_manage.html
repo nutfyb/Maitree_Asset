@@ -153,7 +153,7 @@
                             $(".count").html("คงเหลือ  : " + more + " ชิ้น")
                             event.push(
                                 {
-                                    title: 'ช่วงเวลาการตรวจสอบครุภัณฑ์ ประจำปี ' + data[0].years,
+                                    title: 'ช่วงเวลาการตรวจสอบครุภัณฑ์ ประจำปี ' + data[0].Years,
                                     start: data[0].Date_start,
                                     end: data[0].Date_end
                                 }
@@ -203,12 +203,20 @@
             $("#bt_UpdateDate").click(function () {
                 let date_start_update = $("input[type=date][name=Date_start_update]").val();
                 let date_end_update = $("input[type=date][name=Date_end_update]").val();
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var yyyy = today.getFullYear();
+
+                today = yyyy + '-' + mm + '-' + dd;
 
                 if (!date_start_update || date_start_update.length === 0 || !date_end_update || date_end_update.length === 0) {
                     $(".alertText").html("กรุณาใส่วันที่เริ่มต้น หรือ วันที่สิ้นสุด")
                     $("#alertmodal").modal();
+                }else if(date_start_update >=date_end_update || date_start_update < today){
+                    $(".alertText").html("กรุณากรอกวันที่ที่ถูกต้อง")
+                    $("#alertmodal").modal();
                 } else {
-
                     $.ajax({
                         method: "PUT",
                         url: "/dateTime/updateTime/" + date_start_update + "/" + date_end_update
@@ -238,6 +246,9 @@
 
                 if (!date_start_add || date_start_add.length === 0 || !date_end_add || date_end_add.length === 0) {
                     $(".alertText").html("กรุณาใส่วันที่เริ่มต้น หรือ วันที่สิ้นสุด")
+                    $("#alertmodal").modal();
+                }else if(date_start_add >=date_end_add){
+                    $(".alertText").html("กรุณากรอกวันที่ที่ถูกต้อง")
                     $("#alertmodal").modal();
                 } else {
                     $.ajax({
