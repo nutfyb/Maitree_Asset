@@ -825,6 +825,20 @@ app.put("/item/edit", function (req, res) {
     })
 });
 
+// delete user 
+app.delete("/manageUser/deleteAllUser/:Email", function (req, res) {
+    const Email = req.params.Email;
+    const Year = new Date().getFullYear();
+    const sql = "DELETE from Year_user WHERE Email_user = ? AND Year=?"
+    con.query(sql, [Email,Year], function (err, result, fields) {
+        if (err) {
+            res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
+        } else {
+            res.json(result)
+        }
+    })
+});
+
 // Load info of all user of manage user page
 app.get("/manageUser/showAllUser/:Year", function (req, res) {
     const Year = req.params.Year;
