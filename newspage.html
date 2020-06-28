@@ -32,6 +32,14 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/localization/messages_th.min.js"></script>
+
+    <!-- alert box -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+
     <title>นับครุภัณฑ์</title>
     <style>
         .card-body span {
@@ -84,15 +92,427 @@
         .head-line {
             border-bottom: 6.5px solid #5969ff !important;
         }
-        
     </style>
     <script>
+        var table
+        var fileName
+        var EmailOwner //เมลคนประกาศ
+        var number
         $(document).ready(function () {
             $("#all").click(function () {
                 window.location.replace("/dashboard");
             });
             getItem();
+
+            table = $('#myTable').DataTable({
+                deferRender: true,
+                columns: [
+                    {
+                        data: "Image",
+                        render: function (data, type, full) {
+                            if (type === 'display') {             //if column 
+                                return '<img class="imgg" ' + ((full.Image != '' && full.Image != null) ? 'src="../upload/' + full.Image + '"' : 'src="../img/noimg.png"') + 'style="width: 100px;hiegh:100px"  alt=""> ';
+                                // return '<input type="checkbox" ' + ((full.image_status == '1') ? 'checked' : '') + ' id="input' + full.image + '" />';
+                            }
+                            return data;
+                        }, title: "รูป",
+                    },
+                    { data: "No", title: "ลำดับ", visible: false },
+                    { data: "Number", visible: false },
+                    { data: 'Head', title: "หัวข้อ" },
+                    { data: "Detail", title: "รายละเอียด" },
+                    { data: "DateEndCreate", title: "วันสิ้นสุดประกาศ" },
+                    { data: "Email_announcer", title: "ผู้กำหนดประกาศ" },
+                    {
+                        data: "No",
+                        render: function (data, type, full, meta) {
+                            return data ? '<button class="btn btn-warning edit" id="edit' + full.No + '" style="width: 25px;hiegh:25px">แก้ไข</button> <button class="btn btn-danger delete" id=delete"' + full.No + '" style="width: 25px;hiegh:25px">ลบ</button>' : '';
+                        }, title: "Actions", orderable: false
+                    },
+                    // { defaultContent: "<button id='edit' class='btn btn-warning ' style='width: 30px;hiegh:30px'>แก้ไข</button> <button id='btndelete' class='btn btn-danger' style='width: 30px;hiegh:30px'>ลบ</button> ", title: "Actions" , orderable: false }
+                ],
+                responsive: true,
+            });
+
+            Loadannounce();
+
+            $('#CancelModal').click(function () {
+                window.location.replace("/announce")
+            })
+
+            $('#CloseModal').click(function () {
+                window.location.replace("/announce")
+            })
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imageResult')
+                            .attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $(function () {
+                $('#upload').on('change', function () {
+                    readURL(input);
+                });
+            });
+
+            /*  ==========================================
+                SHOW UPLOADED IMAGE NAME
+            * ========================================== */
+            var input = document.getElementById('upload');
+            var infoArea = document.getElementById('upload-label');
+
+            input.addEventListener('change', showFileName);
+            function showFileName(event) {
+                var input = event.srcElement;
+                fileName = input.files[0].name;
+                infoArea.textContent = 'File name: ' + fileName;
+            }
         });
+
+        // Function crate table ===========================
+        //=================================================
+
+        function Loadannounce() {
+            $.ajax({
+                method: "GET",
+                url: "/Loadannounce",
+            }).done(function (dataSet, state, xhr) {
+                for (let i = 0; i < dataSet.length; i++) {
+                    dataSet[i].No = i + 1;
+                }
+                console.log(dataSet)
+                //clear DataTable
+                table.clear();
+                //display modified JSON in DataTable
+                table.rows.add(dataSet).draw();
+
+                // add announce ===========================================
+                // ========================================================
+
+                $('#AddAnnounce').click(function (e) { //ปุ่มสร้างข่าว
+                    //    alert("ok")
+                    $("#Head").val('');
+                    $("#Detail").val('');
+                    $("#Date").val('');
+                    $("#upload-label").text('เลือกรูป')
+                    $("#exampleModalLabel").text('สร้างข่าวประชาสัมพันธ์')
+                    $("#ModalAnnounceAdd").modal('toggle');
+                    $("#btnAdd").show();
+                    $("#btnEdit").hide();
+
+                });
+
+                $('#btnAdd').click(function (e) {
+
+                    $('form').submit(function (e) {  //ปุ่มยืนยันใน modal
+                        e.preventDefault();
+                        // alert("aaa")
+                        const formData = new FormData(this);
+                        var head = $("#Head").val();
+                        var detail = $("#Detail").val();
+                        var Date1 = $("#Date").val();
+                        // fileName = $("#PhotoOfAnnounce").val();
+                        // alert(fileName)
+
+
+
+                        // if (head == '' || detail == '' || Date1 == '') {
+
+                        //     swal({
+                        //         title: "กรุณาเลือกข้อมูล",
+                        //         // text: "You will not be able to recover this imaginary file!",
+                        //         type: "info",
+                        //         showCancelButton: false,
+                        //         confirmButtonClass: "btn-primary",
+                        //         // cancelButtonClass: "btn-primary",
+                        //         confirmButtonText: "ตกลง",
+                        //         // cancelButtonText: "ยกเลิก",
+                        //         closeOnConfirm: true,
+                        //         // closeOnCancel: true
+                        //     }, function (isConfirm) {
+                        //         window.location.replace("/announce")
+                        //     })
+
+
+                        //     return;
+                        //     // break stopAdd;
+                        // }
+                        // else {
+                        if ($("#upload")[0].files.length == 0) {
+                            image1 = ''
+                            $.ajax({
+                                method: "POST",
+                                url: "/AddAnnounce/" + EmailOwner,
+                                data: { Head: head, Detail: detail, DateEndCreate: Date1, Image: image1 },
+                            }).done(function (dataSet, state, xhr) {
+                                swal({
+                                    title: "สำเร็จ",
+                                    type: "success",
+                                    // showCancelButton: false,
+                                    confirmButtonClass: "btn-success",
+                                    // cancelButtonClass: "btn-primary",
+                                    confirmButtonText: "ยืนยัน",
+                                    // cancelButtonText: "ยกเลิก",
+                                    closeOnConfirm: false,
+                                    closeOnCancel: true
+                                },
+                                    function (isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.replace(dataSet)
+                                        }
+                                    });
+                                // window.location.replace(dataSet)
+                            }).fail(function (xhr, state, error) {
+
+                            })
+                        }
+                        else {
+
+                            $.ajax({
+                                method: "POST",
+                                url: "/UploadingPhoto",
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                            }).done(function (dataSet, state, xhr) {
+                                console.log(dataSet)
+                                var image = dataSet;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/AddAnnounce/" + EmailOwner,
+                                    data: { Head: head, Detail: detail, DateEndCreate: Date1, Image: image },
+                                }).done(function (dataSet, state, xhr) {
+                                    swal({
+                                        title: "สำเร็จ",
+                                        type: "success",
+                                        // showCancelButton: false,
+                                        confirmButtonClass: "btn-success",
+                                        // cancelButtonClass: "btn-primary",
+                                        confirmButtonText: "ยืนยัน",
+                                        // cancelButtonText: "ยกเลิก",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: true
+                                    },
+                                        function (isConfirm) {
+                                            if (isConfirm) {
+                                                window.location.replace(dataSet)
+                                            }
+                                        });
+                                    // window.location.replace(dataSet)
+                                }).fail(function (xhr, state, error) {
+
+                                })
+
+                            }).fail(function (xhr, state, error) {
+
+                            })
+                        }
+
+                        // }
+
+
+
+                    });
+
+                });
+
+                // end add announde ===========================================
+                // ========================================================
+
+
+                // edit announce ===========================================
+                // ========================================================
+                $('#myTable tbody').on('click', '.edit', function () {
+                    const currentRow = $(this).parents('tr')
+                    selectedData = table.row(currentRow).data();
+                    number = selectedData.Number
+                    // alert(number)
+                    $("#btnAdd").hide();
+                    // $("#btnAdd").prop('disabled', true);
+                    $("#btnEdit").show();
+
+                    $("#exampleModalLabel").text('แก้ไขข่าวประชาสัมพันธ์')
+                    $("#Head").val(selectedData.Head);
+                    $("#Detail").val(selectedData.Detail);
+                    $("#Date").val(selectedData.DateEndCreate);
+                    $("#upload-label").text(selectedData.Image)
+                    $("#ModalAnnounceAdd").modal('toggle');
+                    // $("#uploadEdit").prop("placeholder", ""+selectedData.Image+"").placeholder();
+
+                    $('#btnEdit').click(function (e) {
+                        // e.preventDefault();
+                        var image1 = selectedData.Image;
+                        // alert(image1)
+                        $('form').submit(function (e) {  //ปุ่มยืนยันใน modal
+                            e.preventDefault();
+                            // alert("aaa")
+                            const formData = new FormData(this);
+                            var head = $("#Head").val();
+                            var detail = $("#Detail").val();
+                            var Date1 = $("#Date").val();
+                            // var image1 = $("#upload-label").val();
+                            // fileName = $("#PhotoOfAnnounce").val();
+                            // alert(fileName)
+
+                            // if (head == '' || detail == '' || Date1 == '') {
+
+                            //     swal({
+                            //         title: "กรุณาเลือกข้อมูล",
+                            //         // text: "You will not be able to recover this imaginary file!",
+                            //         type: "info",
+                            //         showCancelButton: false,
+                            //         confirmButtonClass: "btn-primary",
+                            //         // cancelButtonClass: "btn-primary",
+                            //         confirmButtonText: "ตกลง",
+                            //         // cancelButtonText: "ยกเลิก",
+                            //         closeOnConfirm: true,
+                            //         // closeOnCancel: true
+                            //     }, function (isConfirm) {
+                            //         window.location.replace("/announce")
+                            //     })
+
+
+                            //     // return;
+                            // }
+                            // else {
+
+                            if ($("#upload")[0].files.length == 0) {
+                                // image1 = ''
+                                $.ajax({
+                                    type: "PUT",
+                                    url: "/EditAnnounce/" + EmailOwner + "/" + number,
+                                    data: { Head: head, Detail: detail, DateEndCreate: Date1, Image: image1 },
+                                }).done(function (dataSet, state, xhr) {
+                                    swal({
+                                        title: "สำเร็จ",
+                                        type: "success",
+                                        // showCancelButton: false,
+                                        confirmButtonClass: "btn-success",
+                                        // cancelButtonClass: "btn-primary",
+                                        confirmButtonText: "ยืนยัน",
+                                        // cancelButtonText: "ยกเลิก",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: true
+                                    },
+                                        function (isConfirm) {
+                                            if (isConfirm) {
+                                                window.location.replace(dataSet)
+                                            }
+                                        });
+                                    // window.location.replace(dataSet)
+                                }).fail(function (xhr, state, error) {
+
+                                })
+                            }
+                            else {
+
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/UploadingPhoto",
+                                    data: formData,
+                                    contentType: false,
+                                    processData: false,
+                                }).done(function (dataSet, state, xhr) {
+                                    console.log(dataSet)
+                                    // alert(number)
+                                    var image = dataSet;
+                                    $.ajax({
+                                        type: "PUT",
+                                        url: "/EditAnnounce/" + EmailOwner + "/" + number,
+                                        data: { Head: head, Detail: detail, DateEndCreate: Date1, Image: image },
+                                    }).done(function (dataSet, state, xhr) {
+                                        swal({
+                                            title: "สำเร็จ",
+                                            type: "success",
+                                            // showCancelButton: false,
+                                            confirmButtonClass: "btn-success",
+                                            // cancelButtonClass: "btn-primary",
+                                            confirmButtonText: "ยืนยัน",
+                                            // cancelButtonText: "ยกเลิก",
+                                            closeOnConfirm: false,
+                                            closeOnCancel: true
+                                        },
+                                            function (isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location.replace(dataSet)
+                                                }
+                                            });
+                                        // window.location.replace(dataSet)
+                                    }).fail(function (xhr, state, error) {
+
+                                    })
+
+                                }).fail(function (xhr, state, error) {
+
+                                })
+                            }
+
+
+                            // }
+
+                        });
+                        // return true;
+                    });
+
+
+                });
+                // end edit announce ===========================================
+                // =============================================================
+
+                // update announce ===========================================
+                // ========================================================
+                $('#myTable tbody').on('click', '.delete', function () {
+                    const currentRow = $(this).parents('tr')
+                    selectedData = table.row(currentRow).data();
+                    number = selectedData.Number
+
+                    $.ajax({
+                        method: "DELETE",
+                        url: "/DeleteAnnounce/" + number,
+                    }).done(function (dataSet, state, xhr) {
+
+                        swal({
+                            title: "สำเร็จ",
+                            type: "success",
+                            // showCancelButton: false,
+                            confirmButtonClass: "btn-success",
+                            // cancelButtonClass: "btn-primary",
+                            confirmButtonText: "ยืนยัน",
+                            // cancelButtonText: "ยกเลิก",
+                            closeOnConfirm: false,
+                            closeOnCancel: true
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.replace(dataSet)
+                                }
+                            });
+                        // window.location.replace(dataSet)
+                    }).fail(function (xhr, state, error) {
+
+                    })
+                })
+
+                // end update announce ===========================================
+                // ========================================================
+
+
+            }).fail(function (xhr, state, error) {
+
+            })
+        }
+
+        // Function crate table End =======================
+        //=================================================
+
+
         function getItem() {
             //get users from DB
             $.ajax({
@@ -100,6 +520,7 @@
                 url: "/profile/infouser"
             }).done(function (data, state, xhr) {
                 $(".user").html(data.name);
+                EmailOwner = data.email;
                 document.getElementById('pic').src = data.photo;
                 if (data.email === undefined) {
                     window.location.replace("/checkpage")
@@ -153,46 +574,17 @@
                 $("#alertmodal").modal();
             });
 
-            $('#adduser').on('click', function () {
-                $(".bd-example-modal-lg").modal();
+            // $('#adduser').on('click', function () {
+            //     $(".bd-example-modal-lg").modal();
 
-            });
+            // });
 
-            function readURL(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
 
-                    reader.onload = function (e) {
-                        $('#imageResult')
-                            .attr('src', e.target.result);
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-
-            $(function () {
-                $('#upload').on('change', function () {
-                    readURL(input);
-                });
-            });
-
-            /*  ==========================================
-                SHOW UPLOADED IMAGE NAME
-            * ========================================== */
-            var input = document.getElementById('upload');
-            var infoArea = document.getElementById('upload-label');
-
-            input.addEventListener('change', showFileName);
-            function showFileName(event) {
-                var input = event.srcElement;
-                var fileName = input.files[0].name;
-                infoArea.textContent = 'File name: ' + fileName;
-            }
         }
     </script>
 </head>
 
-<body>
+<body style="background-color:rgba(255, 255, 255, 0.768)">
     <div class="dashboard-main-wrapper">
         <!-- navbar -->
         <!-- ============================================================== -->
@@ -241,89 +633,7 @@
         <!-- ============================================================== -->
         <!-- navbar ด้านข้าง -->
         <!-- ============================================================== -->
-
-
-        <div class="row ">
-            <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10 mt-3 mb-3">
-                <div class="input-group mb-3">
-                    <div id="container2"></div>
-                    <div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 mt-3 mb-3">
-                <div class="btn btn-warning  text-light" id="adduser">
-                    สร้างข่าว
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- modal2  -->
-        <!-- ============================================================== -->
-
-        <div class="modal fade bd-example-modal-lg" tabindex="-1" Role="dialog" aria-labelledby="mySmallModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" Role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">สร้างข่าวประชาสัมพันธ์</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="" class="col-form-label">หัวข้อ : </label>
-                                <input type="text" class="form-control" id="">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="" class="col-form-label">เนื้อหา : </label>
-                                <input type="text" class="form-control" id="">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">วันที่ :</label>
-                                <input type="date" class="form-control" name="">
-                            </div>
-
-
-                            <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-                                <input id="upload" type="file" onchange="readURL(this);" class="form-control border-0">
-                                <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose
-                                    file</label>
-                                <div class="input-group-append">
-                                    <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
-                                            class="fa fa-cloud-upload mr-2 text-muted"></i><small
-                                            class="text-uppercase font-weight-bold text-muted">Choose
-                                            file</small></label>
-                                </div>
-                            </div>
-
-                            <!-- Uploaded image area-->
-                            <div class="image-area mt-4"><img id="imageResult" src="#" alt=""
-                                    class="img-fluid rounded shadow-sm mx-auto d-block"></div>
-
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
-                        <button type="button" class="btn btn-primary" id="save2">ยืนยัน</button>
-                    </div>
-                    </form>
-                </div>
-
-            </div>
-        </div>
     </div>
-    <!-- ============================================================== -->
-    <!-- เสร็จ modal2  -->
-
 
     <div class="nav-left-sidebar sidebar-light">
         <div class="menu-list">
@@ -422,22 +732,107 @@
                 <!-- ============================================================== -->
 
                 <div class="head-line title-head-line">
-                     <span class="badge badge-primary "> <h4 class="text-light"> ข่าวประชาสัมพันธ์  </h4> </span>  
-                        
+                    <span class="badge badge-primary ">
+                        <h4 class="text-light"> ข่าวประชาสัมพันธ์ </h4>
+                    </span>
+                </div>
+
+                <div class="row ">
+                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 mt-3 mb-3">
+                        <div class="input-group mb-3">
+                            <div id="container2"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 mt-3 mb-3 text-right">
+                        <div class="btn btn-success text-light" id="AddAnnounce">
+                            สร้างข่าว
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="row"> -->
+                <div class="">
+                    <table id="myTable" class="table table-striped table-bordered mt-3" style="width:100%">
+                    </table>
+                </div>
+                <!-- </div> -->
+
+            </div>
+
+            <!-- modal Add Announce  -->
+            <!-- ============================================================== -->
+
+            <div class="modal fade bd-example-modal-lg" id="ModalAnnounceAdd" tabindex="-1" Role="dialog"
+                aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog" Role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">สร้างข่าวประชาสัมพันธ์</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="CloseModal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="" enctype="multipart/form-data" id="formAddAnnounce">
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label for="" class="col-form-label">หัวข้อ : </label>
+                                    <input type="text" class="form-control" id="Head" required
+                                        oninvalid="this.setCustomValidity('กรุณาใส่ข้อมูล')"
+                                        oninput="this.setCustomValidity('')">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="" class="col-form-label">เนื้อหา : </label>
+                                    <input type="text" class="form-control" id="Detail" required
+                                        oninvalid="this.setCustomValidity('กรุณาใส่ข้อมูล')"
+                                        oninput="this.setCustomValidity('')">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">วันที่ :</label>
+                                    <input type="date" class="form-control" name="" id="Date" required
+                                        oninvalid="this.setCustomValidity('กรุณาใส่ข้อมูล')"
+                                        oninput="this.setCustomValidity('')">
+                                </div>
 
 
+                                <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+                                    <input id="upload" type="file" onchange="readURL(this);"
+                                        class="form-control border-0" name="filetoupload" accept="image/*">
+                                    <label id="upload-label" for="upload"
+                                        class="font-weight-light text-muted">เลือกรูป</label>
+                                    <div class="input-group-append">
+                                        <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i
+                                                class="fa fa-cloud-upload mr-2 text-muted"></i><small
+                                                class="text-uppercase font-weight-bold text-muted">เลือกรูป</small></label>
+                                    </div>
+                                </div>
+
+                                <!-- Uploaded image area-->
+                                <div class="image-area mt-4"><img id="imageResult" src="#" alt=""
+                                        class="img-fluid rounded shadow-sm mx-auto d-block"></div>
 
 
+                            </div>
 
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="CancelModal"
+                                    data-dismiss="modal">ยกเลิก</button>
+                                <button type="submit" class="btn btn-primary" value="add" id="btnAdd">ยืนยัน</button>
+                                <button type="submit" class="btn btn-primary" value="edit" id="btnEdit">ยืนยัน</button>
+                            </div>
+                        </form>
+                    </div>
 
-
-                        <!-- ============================================================== -->
-
-                        <!-- ============================================================== -->
-                        <!-- เสร็จ modal  -->
-                        <!-- ============================================================== -->
                 </div>
             </div>
+
+            <!-- modal Add Announce End -->
+            <!-- ============================================================== -->
+
+
             <!-- footer  -->
             <!-- ============================================================== -->
 
