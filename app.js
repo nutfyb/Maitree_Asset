@@ -355,6 +355,19 @@ app.get("/manageUser/showAllUsers/:Email_user", function (req, res) {
 });
 
 
+// Load info of adminhistory page
+// app.get("/adminhistorytable/info/", function (req, res) {
+//     const sql = "SELECT COUNT(Asset_Number) AS num FROM item WHERE Email_Committee = ?"
+//     const COUNT = req.params.status;
+//     con.query(sql, [COUNT], function (err, result, fields) {
+//         if (err) {
+//             res.status(503).send("เซิร์ฟเวอร์ไม่ตอบสนอง");
+//         } else {
+//             res.json(result)
+//         }
+//     })
+// });
+
 
 // Load inspected total item numbers by a user
 app.get("/user/profile/inspectedItem/Total/Number1/:Email_Committee", function (req, res) {
